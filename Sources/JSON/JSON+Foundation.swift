@@ -83,7 +83,7 @@ extension JSON {
         case .object(let object):
             let dict = NSMutableDictionary()
             for (key, val) in object {
-                dict[key] = _uncast(val)
+                dict[NSString(string: key)] = _uncast(val)
             }
             return dict.copy()
         case .array(let array):
