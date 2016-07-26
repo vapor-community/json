@@ -1,16 +1,16 @@
 @_exported import Node
 
 extension JSON: NodeConvertible {
-    public func makeNode() throws -> Node {
+    public func makeNode() -> Node {
         switch self {
         case .object(let object):
             var node: [String: Node] = [:]
             for (key, val) in object {
-                node[key] = try val.makeNode()
+                node[key] = val.makeNode()
             }
             return .object(node)
         case .array(let array):
-            let node = try array.map { try $0.makeNode() }
+            let node = array.map { $0.makeNode() }
             return .array(node)
         case .number(let number):
             switch number {
@@ -28,7 +28,7 @@ extension JSON: NodeConvertible {
         }
     }
 
-    public init(with node: Node, in context: Context) throws {
+    public init(with node: Node, in context: Context) {
         switch node {
         case .null:
             self = .null
@@ -46,12 +46,12 @@ extension JSON: NodeConvertible {
         case .string(let string):
             self = .string(string)
         case .array(let array):
-            let json = try array.map { try JSON(with: $0, in: $0) }
+            let json = array.map { JSON(with: $0, in: $0) }
             self = .array(json)
         case .object(let object):
             var json: [String: JSON] = [:]
             for (key, val) in object {
-                json[key] = try JSON(with: val, in: val)
+                json[key] = JSON(with: val, in: val)
             }
             self = .object(json)
         case .bytes(let bytes):
