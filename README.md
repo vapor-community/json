@@ -33,9 +33,10 @@ JSON is `NodeConvertible` which means it can be easily converted to any other mo
 
 ## 🌏 Environment
 
-| Node  |     Xcode    |               Swift                    |
-|:-----:|:------------:|:--------------------------------------:|
-|0.1.x  |8.0 Beta **3**|DEVELOPMENT-SNAPSHOT-2016-07-20-qutheory|
+|JSON|Xcode|Swift|
+|:-:|:-:|:-:|
+|0.2.x|8.0 Beta **3**|DEVELOPMENT-SNAPSHOT-2016-07-25-a|
+|0.1.x|8.0 Beta **3**|DEVELOPMENT-SNAPSHOT-2016-07-20-qutheory|
 
 ## 📖 Documentation
 
