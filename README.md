@@ -29,7 +29,7 @@ let json = try JSON(bytes: string.bytes)
 
 ### ⛓ Node
 
-JSON is `NodeConvertible` which means it can be easily converted to any other model that supports [Node](https://github.com/qutheory/node)
+JSON is `NodeConvertible` which means it can be easily converted to any other model that supports [Node](https://github.com/qutheory/node).
 
 ## 🌏 Environment
 
