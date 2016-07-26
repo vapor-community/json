@@ -37,7 +37,6 @@ class JSONTests: XCTestCase {
             let serialized = "{\"double\":3.14159265358979,\"object\":{\"nested\":\"text\"},\"int\":42,\"string\":\"ferret 🚀\",\"null\":null,\"bool\":false,\"array\":[null,true,1337,\"😄\"]}"
         #endif
 
-
         XCTAssertEqual(
             try json.makeBytes().string,
             serialized
