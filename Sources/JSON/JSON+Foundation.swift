@@ -27,10 +27,10 @@ extension JSON {
         if let double = anyObject as? Double {
             if double == Double(Int(double)) {
                 let int = Int(double)
-                return .number(.integer(int))
-            } else {
-                return .number(.double(double))
+                return .number(.int(int))
             }
+
+            return .number(Node.Number(double))
         }
 
         #if os(Linux)
@@ -92,13 +92,12 @@ extension JSON {
                 nsarray.add(_uncast(item))
             }
             return nsarray.copy()
-        case .number(let number):
-            switch number {
-            case .double(let double):
-                return NSNumber(floatLiteral: double)
-            case .integer(let int):
-                return NSNumber(integerLiteral: int)
-            }
+        case let .number(.double(double)):
+            return NSNumber(value: double)
+        case let .number(.int(int)):
+            return NSNumber(value: int)
+        case let .number(.uint(uint)):
+            return NSNumber(value: uint)
         case .string(let string):
             return NSString(string: string)
         case .bool(let bool):
