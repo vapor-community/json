@@ -3,7 +3,7 @@ public protocol JSONRepresentable {
 }
 
 public protocol JSONInitializable {
-    init(json: JSON)
+    init(json: JSON) throws
 }
 
 public protocol JSONConvertible: JSONRepresentable, JSONInitializable {}
@@ -21,3 +21,5 @@ extension JSONInitializable where Self: NodeInitializable {
         try self.init(node: node)
     }
 }
+
+extension JSON: JSONConvertible {}
