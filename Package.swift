@@ -7,6 +7,6 @@ let package = Package(
     	.Package(url: "https://github.com/qutheory/core.git", majorVersion: 0, minor: 3),
 
         // Data structure for converting between multiple representations
-        .Package(url: "https://github.com/qutheory/node.git", majorVersion: 0, minor: 2)
+        .Package(url: "https://github.com/qutheory/node.git", majorVersion: 0, minor: 3)
     ]
 )

@@ -13,12 +13,7 @@ extension JSON: NodeConvertible {
             let node = array.map { $0.makeNode() }
             return .array(node)
         case .number(let number):
-            switch number {
-            case .double(let double):
-                return .number(.double(double))
-            case .integer(let int):
-                return .number(.int(int))
-            }
+            return .number(number)
         case .string(let string):
             return .string(string)
         case .bool(let bool):
@@ -28,30 +23,23 @@ extension JSON: NodeConvertible {
         }
     }
 
-    public init(with node: Node, in context: Context) {
+    public init(node: Node, in context: Context) {
         switch node {
         case .null:
             self = .null
         case .bool(let bool):
             self = .bool(bool)
         case .number(let number):
-            switch number {
-            case .uint(let uint):
-                self = .number(.integer(Int(uint)))
-            case .int(let int):
-                self = .number(.integer(int))
-            case .double(let double):
-                self = .number(.double(double))
-            }
+            self = .number(number)
         case .string(let string):
             self = .string(string)
         case .array(let array):
-            let json = array.map { JSON(with: $0, in: $0) }
+            let json = array.map { JSON(node: $0, in: context) }
             self = .array(json)
         case .object(let object):
             var json: [String: JSON] = [:]
             for (key, val) in object {
-                json[key] = JSON(with: val, in: val)
+                json[key] = JSON(node: val, in: context)
             }
             self = .object(json)
         case .bytes(let bytes):
