@@ -45,7 +45,7 @@ extension JSON {
             }
 
             if let int = anyObject as? Int {
-                return .number(.integer(int))
+                return .number(.int(int))
             } else if let bool = anyObject as? Bool {
                 return .bool(bool)
             }

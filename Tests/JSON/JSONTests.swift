@@ -99,4 +99,13 @@ class JSONTests: XCTestCase {
 
         falsyPairs.forEach { lhs, rhs in XCTAssert(lhs != rhs, "\(lhs) should equal \(rhs)") }
     }
+
+    func testPolyAdditions() {
+        let json = JSON.number(42)
+        XCTAssertNil(json.pathIndexableArray)
+
+        let object: [String: JSON] = ["hello": .string("world")]
+        let jsonOb = JSON(object)
+        XCTAssert(jsonOb.pathIndexableObject ?? [:] == object)
+    }
 }
