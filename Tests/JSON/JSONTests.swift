@@ -9,7 +9,8 @@ class JSONTests: XCTestCase {
         ("testBytesConversion", testBytesConversion),
         ("testDoubleCast", testDoubleCast),
         ("testUInt", testUInt),
-        ("testEquatable", testEquatable)
+        ("testEquatable", testEquatable),
+        ("testPolyAdditions", testPolyAdditions)
     ]
 
     func testSimple() throws {
