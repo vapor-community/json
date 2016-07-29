@@ -23,7 +23,7 @@ extension JSON: NodeConvertible {
         }
     }
 
-    public init(with node: Node, in context: Context) {
+    public init(node: Node, in context: Context) {
         switch node {
         case .null:
             self = .null
@@ -34,12 +34,12 @@ extension JSON: NodeConvertible {
         case .string(let string):
             self = .string(string)
         case .array(let array):
-            let json = array.map { JSON(with: $0, in: $0) }
+            let json = array.map { JSON(node: $0, in: context) }
             self = .array(json)
         case .object(let object):
             var json: [String: JSON] = [:]
             for (key, val) in object {
-                json[key] = JSON(with: val, in: val)
+                json[key] = JSON(node: val, in: context)
             }
             self = .object(json)
         case .bytes(let bytes):

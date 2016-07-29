@@ -19,8 +19,8 @@ class JSONPolymorphicTests: XCTestCase {
         let int: JSON = .number(1)
         let double: JSON = .number(3.14)
         let string: JSON = .string("hi")
-        let ob: JSON = try JSON(["key": "value"])
-        let arr: JSON = try JSON([1,2,3])
+        let ob: JSON = try JSON(node: ["key": "value"])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssert(bool.string == "true")
         XCTAssert(int.string == "1")
@@ -38,8 +38,8 @@ class JSONPolymorphicTests: XCTestCase {
         let intString: JSON = .string("123")
 
         let histring: JSON = .string("hi")
-        let ob: JSON = try JSON(["key": "value"])
-        let arr: JSON = try JSON([1,2,3])
+        let ob: JSON = try JSON(node: ["key": "value"])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssert(boolTrue.int == 1)
         XCTAssert(boolFalse.int == 0)
@@ -59,8 +59,8 @@ class JSONPolymorphicTests: XCTestCase {
         let intString: JSON = .string("123")
 
         let histring: JSON = .string("hi")
-        let ob: JSON = try JSON(["key": "value"])
-        let arr: JSON = try JSON([1,2,3])
+        let ob: JSON = try JSON(node: ["key": "value"])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssert(boolTrue.uint == 1)
         XCTAssert(boolFalse.uint == 0)
@@ -81,8 +81,8 @@ class JSONPolymorphicTests: XCTestCase {
         let doubleString: JSON = .string("42.5997")
 
         let histring: JSON = .string("hi")
-        let ob: JSON = try JSON(["key": "value"])
-        let arr: JSON = try JSON([1,2,3])
+        let ob: JSON = try JSON(node: ["key": "value"])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssert(boolTrue.float == 1)
         XCTAssert(boolFalse.float == 0)
@@ -104,8 +104,8 @@ class JSONPolymorphicTests: XCTestCase {
         let doubleString: JSON = .string("42.5997")
 
         let histring: JSON = .string("hi")
-        let ob: JSON = try JSON(["key": "value"])
-        let arr: JSON = try JSON([1,2,3])
+        let ob: JSON = try JSON(node: ["key": "value"])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssert(boolTrue.double == 1)
         XCTAssert(boolFalse.double == 0)
@@ -127,8 +127,8 @@ class JSONPolymorphicTests: XCTestCase {
         let int: JSON = .number(42)
         let double: JSON = .number(3.14)
         let string: JSON = .string("hi")
-        let ob: JSON = try JSON(["key": "value"])
-        let arr: JSON = try JSON([1,2,3])
+        let ob: JSON = try JSON(node: ["key": "value"])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssertTrue(null.isNull)
         XCTAssertTrue(lowerNullString.isNull)
@@ -151,8 +151,8 @@ class JSONPolymorphicTests: XCTestCase {
         let boolDouble: JSON = .number(1.0)
         let string: JSON = .string("hi")
         let boolString: JSON = .string("true")
-        let ob: JSON = try JSON(["key": "value"])
-        let arr: JSON = try JSON([1,2,3])
+        let ob: JSON = try JSON(node: ["key": "value"])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssert(null.bool == false)
         XCTAssert(bool.bool == true)
@@ -169,12 +169,12 @@ class JSONPolymorphicTests: XCTestCase {
     func testPolymorphicArray() throws {
         let null: JSON = .null
         let bool: JSON = .bool(true)
-        let int: JSON = try JSON(42)
-        let double: JSON = try JSON(3.14)
-        let string: JSON = try JSON("hi")
+        let int: JSON = .number(42)
+        let double: JSON = .number(3.14)
+        let string: JSON = .string("hi")
         let arrayString: JSON = .string("hi, there, array")
         let ob: JSON = .object(["key": .string("value")])
-        let arr: JSON = try JSON([1,2,3])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssertNil(null.array)
         XCTAssertNil(bool.array)
@@ -194,11 +194,11 @@ class JSONPolymorphicTests: XCTestCase {
     func testPolymorphicObject() throws {
         let null: JSON = .null
         let bool: JSON = .bool(true)
-        let int: JSON = try JSON(42)
-        let double: JSON = try JSON(3.14)
+        let int: JSON = .number(42)
+        let double: JSON = .number(3.14)
         let string: JSON = .string("hi")
-        let ob: JSON = try JSON(["key": "value"])
-        let arr: JSON = try JSON([1,2,3])
+        let ob: JSON = try JSON(node: ["key": "value"])
+        let arr: JSON = try JSON(node: [1,2,3])
 
         XCTAssertNotNil(ob.object)
         XCTAssert(ob.object?["key"]?.string == "value")

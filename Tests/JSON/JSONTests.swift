@@ -16,23 +16,23 @@ class JSONTests: XCTestCase {
         let string = "{\"hello\":\"world\"}"
         let json = try JSON(bytes: string.bytes)
 
-        let expected = try JSON(["hello": "world"])
+        let expected = try JSON(node: ["hello": "world"])
         XCTAssertEqual(json, expected)
 
         XCTAssertEqual(try expected.makeBytes(), string.bytes)
     }
 
     func testComplex() throws {
-        let json = try JSON([
+        let json = try JSON(node: [
             "null": nil,
             "bool": false,
             "string": "ferret 🚀",
             "int": 42,
             "double": 3.14159265358979,
-            "object": JSON([
+            "object": JSON(node: [
                 "nested": "text"
             ]),
-            "array": JSON([nil, true, 1337, "😄"])
+            "array": JSON(node: [nil, true, 1337, "😄"])
         ])
 
         #if os(Linux)
@@ -55,7 +55,7 @@ class JSONTests: XCTestCase {
     func testBytesConversion() throws {
         let string = "hello world"
         let bytes = Node(bytes: string.bytes)
-        let js = try JSON(bytes)
+        let js = try JSON(node: bytes)
         XCTAssert(js.string == string.bytes.base64String)
     }
 
@@ -66,7 +66,7 @@ class JSONTests: XCTestCase {
     }
 
     func testUInt() throws {
-        let json = try JSON(["uint": UInt(259_772)])
+        let json = try JSON(node: ["uint": UInt(259_772)])
         let serialized = try json.makeBytes()
         print("Seri: \(serialized.string)")
         XCTAssert(serialized.string == "{\"uint\":259772}")
@@ -81,8 +81,8 @@ class JSONTests: XCTestCase {
             (.number(1), .bool(true)),
             (.bool(false), .bool(false)),
             (.string("hello"), .string("hello")),
-            (try JSON([1,2,3]), try JSON([1,2,3])),
-            (try JSON(["key": "value"]), try JSON(["key": "value"]))
+            (try JSON(node: [1,2,3]), try JSON(node: [1,2,3])),
+            (try JSON(node: ["key": "value"]), try JSON(node: ["key": "value"]))
         ]
 
         truthyPairs.forEach { lhs, rhs in XCTAssert(lhs == rhs, "\(lhs) should equal \(rhs)") }
@@ -90,11 +90,11 @@ class JSONTests: XCTestCase {
         let falsyPairs: [(JSON, JSON)] = [
             (.null, .number(42)),
             (.number(1), .string("hello")),
-            (.bool(true), try JSON(["key": "value"])),
-            (try JSON([1,2,3]), .bool(false)),
+            (.bool(true), try JSON(node: ["key": "value"])),
+            (try JSON(node: [1,2,3]), .bool(false)),
             (.string("hello"), .string("goodbye")),
-            (try JSON([1,2,3]), try JSON([1,2,3,4])),
-            (try JSON(["key": "value"]), try JSON(["array", "of", "strings"]))
+            (try JSON(node: [1,2,3]), try JSON(node: [1,2,3,4])),
+            (try JSON(node: ["key": "value"]), try JSON(node: ["array", "of", "strings"]))
         ]
 
         falsyPairs.forEach { lhs, rhs in XCTAssert(lhs != rhs, "\(lhs) should equal \(rhs)") }
