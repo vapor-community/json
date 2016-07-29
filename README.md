@@ -2,6 +2,12 @@
 
 Swift wrapper around Foundation.JSON (previously NSJSON).
 
+[![Swift](http://img.shields.io/badge/swift-v3.0--dev.07.25-orange.svg)](#-environment)
+[![Build Status](https://travis-ci.org/qutheory/json.svg?branch=master)](https://travis-ci.org/qutheory/core)
+[![Code Coverage](https://codecov.io/gh/qutheory/json/branch/master/graph/badge.svg)](https://codecov.io/gh/qutheory/json)
+[![Codebeat](https://codebeat.co/badges/a793ad97-47e3-40d9-82cf-2aafc516ef4e)](https://codebeat.co/projects/github-com-qutheory-core)
+[![Slack Status](http://slack.qutheory.io/badge.svg)](http://slack.qutheory.io)
+
 ### ⏬ Serialization
 
 ```swift
@@ -40,7 +46,7 @@ JSON is `NodeConvertible` which means it can be easily converted to any other mo
 
 ## 📖 Documentation
 
-Visit the Vapor web framework's [documentation](http://docs.qutheory.io) for instructions on how to install Swift 3. 
+Visit the Vapor web framework's [documentation](http://docs.qutheory.io) for instructions on how to install Swift 3.
 
 ## 💧 Community
 
