@@ -16,7 +16,7 @@ extension JSON: BytesConvertible {
 // MARK: Nasty Foundation code
 
 extension JSON {
-    private init(serialized: Bytes) throws {
+    fileprivate init(serialized: Bytes) throws {
         let data = Data(bytes: serialized)
         let json = try JSONSerialization.jsonObject(with: data)
 
@@ -68,7 +68,7 @@ extension JSON {
         return .null
     }
 
-    private func serialize() throws -> Bytes {
+    fileprivate func serialize() throws -> Bytes {
         let object = JSON._uncast(self)
         let data = try JSONSerialization.data(withJSONObject: object)
 
@@ -78,7 +78,7 @@ extension JSON {
         return buffer
     }
 
-    private static func _uncast(_ json: JSON) -> AnyObject {
+    private static func _uncast(_ json: JSON) -> Any {
         switch json {
         case .object(let object):
             let dict = NSMutableDictionary()
