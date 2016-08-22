@@ -2,11 +2,12 @@
 
 Swift wrapper around Foundation.JSON (previously NSJSON).
 
-[![Swift](http://img.shields.io/badge/swift-v3.0--dev.07.25-orange.svg)](#-environment)
-[![Build Status](https://travis-ci.org/vapor/json.svg?branch=master)](https://travis-ci.org/vapor/core)
+![Swift](http://img.shields.io/badge/swift-v3.0--dev.08.18-brightgreen.svg)
+[![Build Status](https://travis-ci.org/vapor/json.svg?branch=master)](https://travis-ci.org/vapor/json)
+[![CircleCI](https://circleci.com/gh/vapor/json.svg?style=shield)](https://circleci.com/gh/vapor/json)
 [![Code Coverage](https://codecov.io/gh/vapor/json/branch/master/graph/badge.svg)](https://codecov.io/gh/vapor/json)
-[![Codebeat](https://codebeat.co/badges/a793ad97-47e3-40d9-82cf-2aafc516ef4e)](https://codebeat.co/projects/github-com-qutheory-core)
-[![Slack Status](http://slack.qutheory.io/badge.svg)](http://slack.qutheory.io)
+[![Codebeat](https://codebeat.co/badges/a793ad97-47e3-40d9-82cf-2aafc516ef4e)](https://codebeat.co/projects/github-com-vapor-json)
+[![Slack Status](http://vapor.team/badge.svg)](http://vapor.team)
 
 ### ⏬ Serialization
 
@@ -41,6 +42,9 @@ JSON is `NodeConvertible` which means it can be easily converted to any other mo
 
 |JSON|Xcode|Swift|
 |:-:|:-:|:-:|
+|0.5.x|8.0 Beta **6**|DEVELOPMENT-SNAPSHOT-2016-08-18-a|
+|0.4.x|8.0 Beta **3**|DEVELOPMENT-SNAPSHOT-2016-07-25-a|
+|0.3.x|8.0 Beta **3**|DEVELOPMENT-SNAPSHOT-2016-07-25-a|
 |0.2.x|8.0 Beta **3**|DEVELOPMENT-SNAPSHOT-2016-07-25-a|
 |0.1.x|8.0 Beta **3**|DEVELOPMENT-SNAPSHOT-2016-07-20-qutheory|
 
@@ -54,4 +58,8 @@ We pride ourselves on providing a diverse and welcoming community. Join your fel
 
 ## 🔧 Compatibility
 
-Node has been tested on OS X 10.11, Ubuntu 14.04, and Ubuntu 15.10.
+JSON has been tested on OS X 10.11, Ubuntu 14.04, and Ubuntu 15.10.
+
+## 👥 Author
+
+Created by [Tanner Nelson](https://github.com/tannernelson).
