@@ -1,5 +1,6 @@
+#if os(Linux)
 import XCTest
-@testable import JSONTestSuite
+@testable import JSONTests
 
 XCTMain([
      testCase(JSONTests.allTests),
@@ -7,3 +8,4 @@ XCTMain([
      testCase(JSONIndexableTests.allTests),
      testCase(JSONConvertibleTests.allTests)
 ])
+#endif
