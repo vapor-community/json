@@ -1,6 +1,6 @@
 # JSON
 
-Swift wrapper around Foundation.JSON (previously NSJSON).
+JSON wrapper around [Node](https://github.com/vapor/node) using [vdka](https://github.com/vdka)'s JSON parsing and serializing.
 
 ![Swift](http://img.shields.io/badge/swift-v3.0--dev.08.18-brightgreen.svg)
 [![Build Status](https://travis-ci.org/vapor/json.svg?branch=master)](https://travis-ci.org/vapor/json)
@@ -58,7 +58,7 @@ JSON is `NodeConvertible` which means it can be easily converted to any other mo
 
 ## 📖 Documentation
 
-Visit the Vapor web framework's [documentation](http://docs.qutheory.io) for instructions on how to install Swift 3.
+Visit the Vapor web framework's [documentation](http://docs.vapor.codes) for instructions on how to install Swift 3.
 
 ## 💧 Community
 
