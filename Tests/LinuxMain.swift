@@ -4,8 +4,6 @@ import XCTest
 
 XCTMain([
      testCase(JSONTests.allTests),
-     testCase(JSONPolymorphicTests.allTests),
-     testCase(JSONIndexableTests.allTests),
      testCase(JSONConvertibleTests.allTests)
 ])
 #endif
