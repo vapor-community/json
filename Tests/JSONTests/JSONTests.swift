@@ -50,7 +50,7 @@ class JSONTests: XCTestCase {
 
     override func setUp() {
         var huge: [String: Node] = [:]
-        for i in 0 ... 10_000 {
+        for i in 0 ... 100_000 {
             huge["double_\(i)"] = 3.14159265358979
         }
 
@@ -59,18 +59,23 @@ class JSONTests: XCTestCase {
     }
 
     func testSerializePerformance() throws {
-        // debug 0.035
-        // release 0.025
+        // debug 0.333
+        // release 0.291
+
+        // foundation 0.505 / 0.391
         measure {
             _ = try! self.hugeParsed.makeBytes()
         }
     }
 
     func testParsePerformance() throws {
-        // debug 0.148
-        // release 0.021
+        // debug 0.885
+        // release 0.127
+
+        // foundation 1.060 / 0.777
         measure {
             _ = try! JSON(bytes: self.hugeSerialized)
         }
     }
+
 }

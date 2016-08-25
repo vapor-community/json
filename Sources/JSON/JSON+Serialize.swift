@@ -1,9 +1,58 @@
+/**
+ The MIT License (MIT)
+
+ Copyright (c) 2016 Ethan Jackwitz
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+*/
+
 // MARK: - JSON.Serializer
 
-extension JSON {
-    public struct Serializer {
+import Core
 
-        public struct Option: OptionSet {
+extension JSON {
+    public func serialize(
+        prettyPrint: Bool = false,
+        skipNull: Bool = true,
+        unixNewLines: Bool = true
+    ) throws -> Bytes {
+        var options: Serializer.Option = []
+
+        if prettyPrint {
+            options.insert(.prettyPrint)
+        }
+
+        if !skipNull {
+            options.insert(.noSkipNull)
+        }
+
+        if !unixNewLines {
+            options.insert(.windowsLineEndings)
+        }
+
+        return try JSON.Serializer.serialize(_node, options: options)
+    }
+}
+
+extension JSON {
+    struct Serializer {
+        struct Option: OptionSet {
             public init(rawValue: UInt8) { self.rawValue = rawValue }
             public let rawValue: UInt8
 
@@ -30,16 +79,16 @@ extension JSON {
 }
 
 extension JSON.Serializer {
-    public static func serialize<O: TextOutputStream>(_ node: Node, to stream: inout O, options: Option) throws {
+    static func serialize<O: TextOutputStream>(_ node: Node, to stream: inout O, options: Option) throws {
         let writer = JSON.Serializer(node: node, options: options)
         try writer.writeValue(node, to: &stream)
     }
 
-    public static func serialize(_ node: Node, options: Option = []) throws -> String {
+    static func serialize(_ node: Node, options: Option = []) throws -> Bytes {
         var s = ""
         let writer = JSON.Serializer(node: node, options: options)
         try writer.writeValue(node, to: &s)
-        return s
+        return s.bytes
     }
 }
 
