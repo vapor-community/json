@@ -45,6 +45,15 @@ class JSONTests: XCTestCase {
 
     }
 
+    func testPrettySerialize() throws {
+        let json = try JSON(node: [
+            "hello": "world"
+        ])
+
+        let serialized = try json.serialize(prettyPrint: true).string
+        XCTAssertEqual(serialized, "{\n    \"hello\": \"world\"\n}")
+    }
+
     var hugeParsed: JSON!
     var hugeSerialized: Bytes!
 
