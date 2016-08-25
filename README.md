@@ -34,13 +34,9 @@ let serialized = "{\"hello\":\"world\"}"
 let json = try JSON(bytes: string.bytes)
 ```
 
-### vdka/JSON
+### 🌟 vdka/JSON
 
-Fast and Flexible Native Swift JSON
-
-Parsing / Serializing from [vdka/JSON](https://github.com/vdka/JSON)
-
-By [Ethan Jackwitz](https://github.com/vdka)
+Fast and Flexible Native Swift JSON from [vdka/JSON](https://github.com/vdka/JSON) by [Ethan Jackwitz](https://github.com/vdka)
 
 ### ⛓ Node
 
