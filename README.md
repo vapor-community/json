@@ -34,6 +34,14 @@ let serialized = "{\"hello\":\"world\"}"
 let json = try JSON(bytes: string.bytes)
 ```
 
+### vdka/JSON
+
+Fast and Flexible Native Swift JSON
+
+Parsing / Serializing from [vdka/JSON](https://github.com/vdka/JSON)
+
+By [Ethan Jackwitz](https://github.com/vdka)
+
 ### ⛓ Node
 
 JSON is `NodeConvertible` which means it can be easily converted to any other model that supports [Node](https://github.com/vapor/node).
