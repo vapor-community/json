@@ -1,11 +1,11 @@
 import Foundation
 import Core
+import Node
 
-public enum JSON {
-    case object([String: JSON])
-    case array([JSON])
-    case number(Node.Number)
-    case string(String)
-    case bool(Bool)
-    case null
+public final class JSON {
+    let _node: Node
+
+    init(_node: Node) {
+        self._node = _node
+    }
 }
