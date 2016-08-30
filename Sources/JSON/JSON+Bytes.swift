@@ -5,7 +5,7 @@ extension JSON: BytesConvertible {
         return try serialize()
     }
 
-    public convenience init(bytes: Bytes) throws {
+    public init(bytes: Bytes) throws {
         try self.init(serialized: bytes)
     }
 }

@@ -1,3 +1,5 @@
+import Node
+
 /**
  The MIT License (MIT)
 
@@ -46,13 +48,20 @@ extension JSON {
             options.insert(.windowsLineEndings)
         }
 
-        return try JSON.Serializer.serialize(_node, options: options)
+        return try JSON.Serializer.serialize(self, options: options).bytes
     }
 }
 
+// MARK https://raw.githubusercontent.com/vdka/JSON/master/Sources/JSONCore/JSONSerializer.swift 0.10.0
+
+
+
+// MARK: - JSON.Serializer
+
 extension JSON {
-    struct Serializer {
-        struct Option: OptionSet {
+    public struct Serializer {
+
+        public struct Option: OptionSet {
             public init(rawValue: UInt8) { self.rawValue = rawValue }
             public let rawValue: UInt8
 
@@ -66,7 +75,7 @@ extension JSON {
             public static let windowsLineEndings  = Option(rawValue: 0b0110)
         }
 
-        init(node: Node, options: Option = []) {
+        init(json: JSON, options: Option = []) {
             self.skipNull = !options.contains(.noSkipNull)
             self.prettyPrint = options.contains(.prettyPrint)
             self.useWindowsLineEndings = options.contains(.windowsLineEndings)
@@ -79,37 +88,38 @@ extension JSON {
 }
 
 extension JSON.Serializer {
-    static func serialize<O: TextOutputStream>(_ node: Node, to stream: inout O, options: Option) throws {
-        let writer = JSON.Serializer(node: node, options: options)
-        try writer.writeValue(node, to: &stream)
+    public static func serialize<O: TextOutputStream>(_ json: JSON, to stream: inout O, options: Option) throws {
+        let writer = JSON.Serializer(json: json, options: options)
+        try writer.writeValue(json, to: &stream)
     }
 
-    static func serialize(_ node: Node, options: Option = []) throws -> Bytes {
+    public static func serialize(_ json: JSON, options: Option = []) throws -> String {
         var s = ""
-        let writer = JSON.Serializer(node: node, options: options)
-        try writer.writeValue(node, to: &s)
-        return s.bytes
+        let writer = JSON.Serializer(json: json, options: options)
+        try writer.writeValue(json, to: &s)
+        return s
     }
 }
 
 extension JSON.Serializer {
-    func writeValue<O: TextOutputStream>(_ value: Node, to stream: inout O, indentLevel: Int = 0) throws {
-        switch value {
+    func writeValue<O: TextOutputStream>(_ value: JSON, to stream: inout O, indentLevel: Int = 0) throws {
+        switch value.node {
         case .array(let a):
             try writeArray(a, to: &stream, indentLevel: indentLevel)
 
         case .bool(let b):
             writeBool(b, to: &stream)
 
-        case .number(let num):
-            switch num {
+        case .number(let number):
+            switch number {
             case .double(let d):
                 try writeDouble(d, to: &stream)
             case .int(let i):
                 writeInteger(i, to: &stream)
-            case .uint(let ui):
-                writeInteger(ui, to: &stream)
+            case .uint(let u):
+                writeUInteger(u, to: &stream)
             }
+            
         case .null where !skipNull:
             writeNull(to: &stream)
 
@@ -164,7 +174,7 @@ extension JSON.Serializer {
                 writeNewlineIfNeeded(to: &stream)
             }
             writeIndentIfNeeded(indentLevel + 1, to: &stream)
-            try writeValue(v, to: &stream, indentLevel: indentLevel + 1)
+            try writeValue(JSON(v), to: &stream, indentLevel: indentLevel + 1)
         }
         writeNewlineIfNeeded(to: &stream)
         writeIndentIfNeeded(indentLevel, to: &stream)
@@ -194,7 +204,7 @@ extension JSON.Serializer {
             writeIndentIfNeeded(indentLevel + 1, to: &stream)
             writeString(key, to: &stream)
             stream.write(prettyPrint ? ": " : ":")
-            try writeValue(value, to: &stream, indentLevel: indentLevel + 1)
+            try writeValue(JSON(value), to: &stream, indentLevel: indentLevel + 1)
         }
         writeNewlineIfNeeded(to: &stream)
         writeIndentIfNeeded(indentLevel, to: &stream)
@@ -205,21 +215,21 @@ extension JSON.Serializer {
         switch b {
         case true:
             stream.write("true")
-
+            
         case false:
             stream.write("false")
         }
     }
-
+    
     func writeNull<O: TextOutputStream>(to stream: inout O) {
         stream.write("null")
     }
-
-    func writeInteger<O: TextOutputStream>(_ ui: UInt, to stream: inout O) {
-        stream.write(ui.description)
+    
+    func writeInteger<O: TextOutputStream>(_ i: Int, to stream: inout O) {
+        stream.write(i.description)
     }
 
-    func writeInteger<O: TextOutputStream>(_ i: Int, to stream: inout O) {
+    func writeUInteger<O: TextOutputStream>(_ i: UInt, to stream: inout O) {
         stream.write(i.description)
     }
 
@@ -227,7 +237,7 @@ extension JSON.Serializer {
         guard d.isFinite else { throw JSON.Serializer.Error.invalidNumber }
         stream.write(d.description)
     }
-
+    
     func writeString<O: TextOutputStream>(_ s: String, to stream: inout O) {
         stream.write("\"")
         stream.write(s)

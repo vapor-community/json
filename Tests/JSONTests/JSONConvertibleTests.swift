@@ -1,6 +1,7 @@
 import XCTest
 @testable import JSON
 import Core
+import Node
 
 class Person: JSONConvertible, NodeConvertible {
     let name: String

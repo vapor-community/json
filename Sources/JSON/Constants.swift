@@ -23,19 +23,22 @@
  */
 
 
+
 // json special characters
 let arrayOpen: UTF8.CodeUnit = "[".utf8.first!
 let objectOpen: UTF8.CodeUnit = "{".utf8.first!
 let arrayClose: UTF8.CodeUnit = "]".utf8.first!
 let objectClose: UTF8.CodeUnit = "}".utf8.first!
-let comma_: UTF8.CodeUnit = ",".utf8.first!
+let cma: UTF8.CodeUnit = ",".utf8.first!
 let colon: UTF8.CodeUnit = ":".utf8.first!
 let quote: UTF8.CodeUnit = "\"".utf8.first!
 let slash: UTF8.CodeUnit = "/".utf8.first!
 let backslash: UTF8.CodeUnit = "\\".utf8.first!
 
+let star: UTF8.CodeUnit = "*".utf8.first!
+
 // whitespace characters
-let space_: UTF8.CodeUnit = " ".utf8.first!
+let spc: UTF8.CodeUnit = " ".utf8.first!
 let tab: UTF8.CodeUnit = "\t".utf8.first!
 let cr: UTF8.CodeUnit = "\r".utf8.first!
 let newline: UTF8.CodeUnit = "\n".utf8.first!

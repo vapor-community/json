@@ -2,10 +2,10 @@ import Foundation
 import Core
 import Node
 
-public final class JSON {
-    let _node: Node
+public struct JSON: NodeBacked {
+    public var node: Node
 
-    init(_node: Node) {
-        self._node = _node
+    public init(_ node: Node) {
+        self.node = node
     }
 }

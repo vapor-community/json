@@ -1,5 +1,5 @@
 extension JSON: Equatable {
     public static func ==(lhs: JSON, rhs: JSON) -> Bool {
-        return lhs._node == rhs._node
+        return lhs.node == rhs.node
     }
 }

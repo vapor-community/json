@@ -1,11 +1,15 @@
 import XCTest
 @testable import JSON
 import Core
+import Node
 
 class JSONTests: XCTestCase {
     static let allTests = [
         ("testParse", testParse),
         ("testSerialize", testSerialize),
+        ("testComments", testComments),
+        ("testSerializePerformance", testSerializePerformance),
+        ("testParsePerformance", testParsePerformance),
     ]
 
     func testParse() throws {
@@ -45,6 +49,16 @@ class JSONTests: XCTestCase {
 
     }
 
+    func testComments() throws {
+        let string = " /* asdfg */ {\"1\":1}"
+        do {
+            let parsed = try JSON(bytes: string.bytes)
+            XCTAssertEqual(parsed["1"]?.int, 1)
+        } catch {
+            XCTFail("Could not parse: \(error)")
+        }
+    }
+
     func testPrettySerialize() throws {
         let json = try JSON(node: [
             "hello": "world"
@@ -63,7 +77,7 @@ class JSONTests: XCTestCase {
             huge["double_\(i)"] = 3.14159265358979
         }
 
-        hugeParsed = JSON(_node: Node.object(huge))
+        hugeParsed = JSON(.object(huge))
         hugeSerialized = try! hugeParsed.makeBytes()
     }
 
