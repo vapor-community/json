@@ -1,29 +1,32 @@
 import XCTest
 @testable import JSON
 import Core
+import Node
 
 class JSONTests: XCTestCase {
     static let allTests = [
-        ("testSimple", testSimple),
-        ("testComplex", testComplex),
-        ("testBytesConversion", testBytesConversion),
-        ("testDoubleCast", testDoubleCast),
-        ("testUInt", testUInt),
-        ("testEquatable", testEquatable),
-        ("testPolyAdditions", testPolyAdditions)
+        ("testParse", testParse),
+        ("testSerialize", testSerialize),
+        ("testComments", testComments),
+        ("testSerializePerformance", testSerializePerformance),
+        ("testParsePerformance", testParsePerformance),
     ]
 
-    func testSimple() throws {
-        let string = "{\"hello\":\"world\"}"
+    func testParse() throws {
+        let string = "{\"double\":3.14159265358979,\"object\":{\"nested\":\"text\"},\"array\":[true,1337,\"😄\"],\"int\":42,\"bool\":false,\"string\":\"ferret 🚀\"}"
         let json = try JSON(bytes: string.bytes)
 
-        let expected = try JSON(node: ["hello": "world"])
-        XCTAssertEqual(json, expected)
-
-        XCTAssertEqual(try expected.makeBytes(), string.bytes)
+        XCTAssertEqual(json["bool"]?.bool, false)
+        XCTAssertEqual(json["string"]?.string, "ferret 🚀")
+        XCTAssertEqual(json["int"]?.int, 42)
+        XCTAssertEqual(json["double"]?.double, 3.14159265358979)
+        XCTAssertEqual(json["object", "nested"]?.string, "text")
+        XCTAssertEqual(json["array", 0]?.bool, true)
+        XCTAssertEqual(json["array", 1]?.int, 1337)
+        XCTAssertEqual(json["array", 2]?.string, "😄")
     }
 
-    func testComplex() throws {
+    func testSerialize() throws {
         let json = try JSON(node: [
             "null": nil,
             "bool": false,
@@ -36,78 +39,66 @@ class JSONTests: XCTestCase {
             "array": JSON(node: [nil, true, 1337, "😄"])
         ])
 
-        #if os(Linux)
-            let serialized = "{\"bool\":0,\"null\":null,\"string\":\"ferret 🚀\",\"int\":42,\"double\":3.14159265358979,\"array\":[null,1,1337,\"😄\"],\"object\":{\"nested\":\"text\"}}"
-            // let serialized = "{\"bool\":0,\"int\":42,\"null\":null,\"string\":\"ferret 🚀\",\"double\":3.14159265358979,\"array\":[null,1,1337,\"😄\"],\"object\":{\"nested\":\"text\"}}"
-        #else
-            let serialized = "{\"double\":3.14159265358979,\"object\":{\"nested\":\"text\"},\"int\":42,\"string\":\"ferret 🚀\",\"null\":null,\"bool\":false,\"array\":[null,true,1337,\"😄\"]}"
-        #endif
+        let serialized = try json.makeBytes().string
+        XCTAssert(serialized.contains("\"bool\":false"))
+        XCTAssert(serialized.contains("\"string\":\"ferret 🚀\""))
+        XCTAssert(serialized.contains("\"int\":42"))
+        XCTAssert(serialized.contains("\"double\":3.14159265358979"))
+        XCTAssert(serialized.contains("\"object\":{\"nested\":\"text\"}"))
+        XCTAssert(serialized.contains("\"array\":[true,1337,\"😄\"]"))
 
-        XCTAssertEqual(
-            try json.makeBytes().string,
-            serialized
-        )
-
-        XCTAssertEqual(
-            try JSON(bytes: serialized.bytes),
-            json
-        )
     }
 
-    func testBytesConversion() throws {
-        let string = "hello world"
-        let bytes = Node(bytes: string.bytes)
-        let js = try JSON(node: bytes)
-        XCTAssert(js.string == string.bytes.base64String)
+    func testComments() throws {
+        let string = " /* asdfg */ {\"1\":1}"
+        do {
+            let parsed = try JSON(bytes: string.bytes)
+            XCTAssertEqual(parsed["1"]?.int, 1)
+        } catch {
+            XCTFail("Could not parse: \(error)")
+        }
     }
 
-    func testDoubleCast() throws {
-        let jsonString = "{\"double\":3.14159}"
-        let json = try JSON(bytes: jsonString.bytes)
-        XCTAssert(json["double"]?.double == 3.14159)
+    func testPrettySerialize() throws {
+        let json = try JSON(node: [
+            "hello": "world"
+        ])
+
+        let serialized = try json.serialize(prettyPrint: true).string
+        XCTAssertEqual(serialized, "{\n    \"hello\": \"world\"\n}")
     }
 
-    func testUInt() throws {
-        let json = try JSON(node: ["uint": UInt(259_772)])
-        let serialized = try json.makeBytes()
-        print("Seri: \(serialized.string)")
-        XCTAssert(serialized.string == "{\"uint\":259772}")
+    var hugeParsed: JSON!
+    var hugeSerialized: Bytes!
+
+    override func setUp() {
+        var huge: [String: Node] = [:]
+        for i in 0 ... 100_000 {
+            huge["double_\(i)"] = 3.14159265358979
+        }
+
+        hugeParsed = JSON(.object(huge))
+        hugeSerialized = try! hugeParsed.makeBytes()
     }
 
-    func testEquatable() throws {
-        let truthyPairs: [(JSON, JSON)] = [
-            (.null, .null),
-            (.number(1), .number(1.0)),
-            (.bool(true), .bool(true)),
-            (.bool(true), .number(1.0)),
-            (.number(1), .bool(true)),
-            (.bool(false), .bool(false)),
-            (.string("hello"), .string("hello")),
-            (try JSON(node: [1,2,3]), try JSON(node: [1,2,3])),
-            (try JSON(node: ["key": "value"]), try JSON(node: ["key": "value"]))
-        ]
+    func testSerializePerformance() throws {
+        // debug 0.333
+        // release 0.291
 
-        truthyPairs.forEach { lhs, rhs in XCTAssert(lhs == rhs, "\(lhs) should equal \(rhs)") }
-
-        let falsyPairs: [(JSON, JSON)] = [
-            (.null, .number(42)),
-            (.number(1), .string("hello")),
-            (.bool(true), try JSON(node: ["key": "value"])),
-            (try JSON(node: [1,2,3]), .bool(false)),
-            (.string("hello"), .string("goodbye")),
-            (try JSON(node: [1,2,3]), try JSON(node: [1,2,3,4])),
-            (try JSON(node: ["key": "value"]), try JSON(node: ["array", "of", "strings"]))
-        ]
-
-        falsyPairs.forEach { lhs, rhs in XCTAssert(lhs != rhs, "\(lhs) should equal \(rhs)") }
+        // foundation 0.505 / 0.391
+        measure {
+            _ = try! self.hugeParsed.makeBytes()
+        }
     }
 
-    func testPolyAdditions() {
-        let json = JSON.number(42)
-        XCTAssertNil(json.pathIndexableArray)
+    func testParsePerformance() throws {
+        // debug 0.885
+        // release 0.127
 
-        let object: [String: JSON] = ["hello": .string("world")]
-        let jsonOb = JSON(object)
-        XCTAssert(jsonOb.pathIndexableObject ?? [:] == object)
+        // foundation 1.060 / 0.777
+        measure {
+            _ = try! JSON(bytes: self.hugeSerialized)
+        }
     }
+
 }

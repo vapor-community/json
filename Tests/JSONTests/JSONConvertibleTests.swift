@@ -1,6 +1,7 @@
 import XCTest
 @testable import JSON
 import Core
+import Node
 
 class Person: JSONConvertible, NodeConvertible {
     let name: String
@@ -28,7 +29,7 @@ class JSONConvertibleTests: XCTestCase {
     ]
 
     func testJSONInitializable() throws {
-        let json = JSON.object(["name": .string("human-name"), "age": .number(25)])
+        let json = try JSON(node: ["name": "human-name", "age": 25])
         let person = try Person(json: json)
         XCTAssert(person.name == "human-name")
         XCTAssert(person.age == 25)
