@@ -105,7 +105,7 @@ class JSONTests: XCTestCase {
         ])
 
         let serialized = try json.serialize(prettyPrint: true).string
-        XCTAssertEqual(serialized, "{\n  \"hello\" : \"world\"\n}")
+        XCTAssertEqual(serialized, "{\n    \"hello\": \"world\"\n}")
     }
 
     func testStringEscaping() throws {

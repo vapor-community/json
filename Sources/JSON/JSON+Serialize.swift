@@ -1,23 +1,14 @@
 import Core
+import Jay
 
 extension JSON {
     public func serialize(
         prettyPrint: Bool = false
     ) throws -> Bytes {
-        let object = Node._uncast(node)
-
-        var options: JSONSerialization.WritingOptions = []
-
-        if prettyPrint {
-            options.insert(.prettyPrinted)
-        }
-
-        let data = try JSONSerialization.data(withJSONObject: object, options: options)
-
-        var buffer = Bytes(repeating: 0, count: data.count)
-        data.copyBytes(to: &buffer, count: data.count)
-
-        return buffer
+        
+        let formatting: Jay.Formatting = prettyPrint ? .prettified : .minified
+        let json = node.toJSON()
+        return try Jay(formatting: formatting).dataFromJson(json: json)
     }
 }
 
