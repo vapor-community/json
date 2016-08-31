@@ -38,6 +38,9 @@ extension Sequence where Iterator.Element == Byte {
         var multilineComment = false
         var lineComment = false
 
+        var previousWasBackSlash = false
+        var inString = false
+
         for byte in self {
             if multilineComment {
                 if previousWasAsterisk {
@@ -74,10 +77,27 @@ extension Sequence where Iterator.Element == Byte {
                 default:
                     commentsRemoved.append(byte)
                 }
+            } else if previousWasBackSlash {
+                previousWasBackSlash = false
+                commentsRemoved.append(byte)
+            } else if inString {
+                switch byte {
+                case Byte.quote:
+                    inString = false
+                    commentsRemoved.append(byte)
+                default:
+                    commentsRemoved.append(byte)
+                }
             } else {
                 switch byte {
                 case Byte.forwardSlash:
                     previousWasForwardSlash = true
+                case Byte.backSlash:
+                    previousWasBackSlash = true
+                    commentsRemoved.append(byte)
+                case Byte.quote:
+                    inString = true
+                    commentsRemoved.append(byte)
                 default:
                     commentsRemoved.append(byte)
                 }
