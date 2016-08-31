@@ -1,6 +1,6 @@
 import Foundation
 import Core
-import Node
+@_exported import Node
 
 public struct JSON: NodeBacked {
     public var node: Node
