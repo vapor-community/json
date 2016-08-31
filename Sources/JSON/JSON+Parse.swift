@@ -104,7 +104,7 @@ extension Node {
 
         #if os(Linux)
             if let dict = anyObject as? [String: Any] {
-                var object: [String: JSON] = [:]
+                var object: [String: Node] = [:]
                 for (key, val) in dict {
                     object[key] = _cast(val)
                 }
