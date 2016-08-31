@@ -2,9 +2,7 @@ import Core
 
 extension JSON {
     public func serialize(
-        prettyPrint: Bool = false,
-        skipNull: Bool = true,
-        unixNewLines: Bool = true
+        prettyPrint: Bool = false
     ) throws -> Bytes {
         let object = Node._uncast(node)
 

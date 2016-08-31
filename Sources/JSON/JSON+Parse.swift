@@ -3,9 +3,8 @@ import Core
 extension JSON {
     public init(
         serialized: Bytes,
-        allowComments: Bool = true,
-        omitNulls: Bool = true,
-        allowFragments: Bool = true
+        allowComments: Bool = false,
+        allowFragments: Bool = false
     ) throws {
 
         var options: JSONSerialization.ReadingOptions = []

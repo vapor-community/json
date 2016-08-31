@@ -53,7 +53,7 @@ class JSONTests: XCTestCase {
     func testComments() throws {
         let string = " /* asdfg */ {\"1\":1}"
         do {
-            let parsed = try JSON(bytes: string.bytes)
+            let parsed = try JSON(serialized: string.bytes, allowComments: true)
             XCTAssertEqual(parsed["1"]?.int, 1)
         } catch {
             XCTFail("Could not parse: \(error)")
@@ -63,7 +63,7 @@ class JSONTests: XCTestCase {
     func testCommentsSingle() throws {
         let string = " {\"1\":1 // test \n }"
         do {
-            let parsed = try JSON(bytes: string.bytes)
+            let parsed = try JSON(serialized: string.bytes, allowComments: true)
             XCTAssertEqual(parsed["1"]?.int, 1)
         } catch {
             XCTFail("Could not parse: \(error)")
