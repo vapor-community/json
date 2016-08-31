@@ -10,6 +10,7 @@ class JSONTests: XCTestCase {
         ("testComments", testComments),
         ("testCommentsSingle", testCommentsSingle),
         ("testCommentsInternal", testCommentsInternal),
+        ("testCrazyCommentInternal", testCrazyCommentInternal),
         ("testSerializePerformance", testSerializePerformance),
         ("testParsePerformance", testParsePerformance),
     ]
@@ -76,6 +77,16 @@ class JSONTests: XCTestCase {
         do {
             let parsed = try JSON(serialized: string.bytes, allowComments: true)
             XCTAssertEqual(parsed["1"]?.string, "/* comment */")
+        } catch {
+            XCTFail("Could not parse: \(error)")
+        }
+    }
+
+    func testCrazyCommentInternal() throws {
+        let string = "{\"1\": \"Here's a great comment quote \\\"/*why are people doing this*/\\\"\"}"
+        do {
+            let parsed = try JSON(serialized: string.bytes, allowComments: true)
+            XCTAssertEqual(parsed["1"]?.string, "Here's a great comment quote \"/*why are people doing this*/\"")
         } catch {
             XCTFail("Could not parse: \(error)")
         }

@@ -85,6 +85,9 @@ extension Sequence where Iterator.Element == Byte {
                 case Byte.quote:
                     inString = false
                     commentsRemoved.append(byte)
+                case Byte.backSlash:
+                    previousWasBackSlash = true
+                    commentsRemoved.append(byte)
                 default:
                     commentsRemoved.append(byte)
                 }
@@ -92,9 +95,6 @@ extension Sequence where Iterator.Element == Byte {
                 switch byte {
                 case Byte.forwardSlash:
                     previousWasForwardSlash = true
-                case Byte.backSlash:
-                    previousWasBackSlash = true
-                    commentsRemoved.append(byte)
                 case Byte.quote:
                     inString = true
                     commentsRemoved.append(byte)
