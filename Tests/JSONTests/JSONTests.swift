@@ -43,20 +43,12 @@ class JSONTests: XCTestCase {
         ])
 
         let serialized = try json.makeBytes().string
-        #if os(Linux)
-            XCTAssert(serialized.contains("\"bool\":0"))
-        #else
-            XCTAssert(serialized.contains("\"bool\":false"))
-        #endif
+        XCTAssert(serialized.contains("\"bool\":false"))
         XCTAssert(serialized.contains("\"string\":\"ferret 🚀\""))
         XCTAssert(serialized.contains("\"int\":42"))
         XCTAssert(serialized.contains("\"double\":3.14159265358979"))
         XCTAssert(serialized.contains("\"object\":{\"nested\":\"text\"}"))
-        #if os(Linux)
-            XCTAssert(serialized.contains("\"array\":[null,1,1337,\"😄\"]"))
-        #else
-            XCTAssert(serialized.contains("\"array\":[null,true,1337,\"😄\"]"))
-        #endif
+        XCTAssert(serialized.contains("\"array\":[null,true,1337,\"😄\"]"))
     }
 
     func testComments() throws {
@@ -105,7 +97,7 @@ class JSONTests: XCTestCase {
         ])
 
         let serialized = try json.serialize(prettyPrint: true).string
-        XCTAssertEqual(serialized, "{\n  \"hello\" : \"world\"\n}")
+        XCTAssertEqual(serialized, "{\n    \"hello\": \"world\"\n}")
     }
 
     func testStringEscaping() throws {
