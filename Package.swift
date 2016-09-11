@@ -10,6 +10,6 @@ let package = Package(
         .Package(url: "https://github.com/vapor/node.git", majorVersion: 0, minor: 6),
 
         // The actual JSON parser
-        .Package(url: "https://github.com/vapor/Jay.git", majorVersion: 0, minor: 21)
+        .Package(url: "https://github.com/DanToml/Jay.git", majorVersion: 0, minor: 21)
     ]
 )
