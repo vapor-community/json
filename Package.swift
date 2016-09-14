@@ -4,12 +4,12 @@ let package = Package(
     name: "JSON",
     dependencies: [
         // Core protocols, extensions, and functionality
-        .Package(url: "https://github.com/vapor/core.git", majorVersion: 0, minor: 5),
+        .Package(url: "https://github.com/vapor/core.git", majorVersion: 1),
 
         // Data structure for converting between multiple representations
-        .Package(url: "https://github.com/vapor/node.git", majorVersion: 0, minor: 6),
+        .Package(url: "https://github.com/vapor/node.git", majorVersion: 1),
 
         // The actual JSON parser
-        .Package(url: "https://github.com/DanToml/Jay.git", majorVersion: 0, minor: 21)
+        .Package(url: "https://github.com/DanToml/Jay.git", majorVersion: 1)
     ]
 )
