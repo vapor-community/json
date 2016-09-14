@@ -17,7 +17,7 @@ class Person: JSONConvertible, NodeConvertible {
         age = try node.extract("age")
     }
 
-    func makeNode() throws -> Node {
+    func makeNode(context: Context = EmptyNode) throws -> Node {
         return try Node(node: ["name": name, "age": age])
     }
 }
