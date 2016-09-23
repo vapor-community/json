@@ -41,4 +41,15 @@ class JSONConvertibleTests: XCTestCase {
         XCTAssert(json["name"]?.string == "human-name")
         XCTAssert(json["age"]?.int == 25)
     }
+    
+    func testSequenceJSONRepresentable() throws {
+        let people = [Person(name: "human-name", age: 25), Person(name: "other-human-name", age: 27)]
+        let json = try people.makeJSON()
+        XCTAssert(json[0]?["name"]?.string == "human-name")
+        XCTAssert(json[0]?["age"]?.int == 25)
+        XCTAssert(json[1]?["name"]?.string == "other-human-name")
+        XCTAssert(json[1]?["age"]?.int == 27)
+
+    }
+
 }
