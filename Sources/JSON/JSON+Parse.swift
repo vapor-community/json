@@ -3,6 +3,7 @@ import Jay
 
 public enum JSONError: Error {
     case allowFragmentsNotSupported
+    case parse(path: String, error: Error)
 }
 
 extension JSON {
