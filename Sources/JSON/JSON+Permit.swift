@@ -1,15 +1,15 @@
 import Node
 
 extension JSON {
-    func permit(_ params: [String]) -> JSON {
+    public func permit(_ params: [String]) -> JSON {
         guard var object = node.object as? [String:Node] else { return self }
         
-        for (key, _) in object {
+        object.forEach { key,_ in
             if(!params.contains(key)) {
                 object[key] = nil
             }
         }
-        
+
         return JSON(Node.object(object))
     }
 }

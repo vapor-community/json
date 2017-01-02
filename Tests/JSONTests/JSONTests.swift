@@ -108,8 +108,11 @@ class JSONTests: XCTestCase {
     }
     
     func testPermit() throws {
-        let json = try JSON(node: ["hello": "world",
-                                   "from":"🚀"])
+        let json = try JSON(node: [
+            "hello": "world",
+            "from": "🚀"
+        ])
+        
         let saneJson = json.permit(["hello"])
         XCTAssertEqual(saneJson["hello"]?.string, "world")
         XCTAssertEqual(saneJson["from"]?.string, nil)
