@@ -10,10 +10,11 @@ public protocol JSONInitializable {
 
 public protocol JSONConvertible: JSONRepresentable, JSONInitializable {}
 
+private let _context = JSONContext()
+
 extension JSONRepresentable where Self: NodeRepresentable {
     public func makeJSON() throws -> JSON {
-        let context = JSONContext()
-        let node = try makeNode(context: context)
+        let node = try makeNode(context: _context)
         return try JSON(node: node)
     }
 }
@@ -21,8 +22,7 @@ extension JSONRepresentable where Self: NodeRepresentable {
 extension JSONInitializable where Self: NodeInitializable {
     public init(json: JSON) throws {
         let node = json.makeNode()
-        let context = JSONContext()
-        try self.init(node: node, in: context)
+        try self.init(node: node, in: _context)
     }
 }
 

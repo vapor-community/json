@@ -1,5 +1,5 @@
 import Node
 
-public struct JSONContext: Context {
+public final class JSONContext: Context {
     public init() {}
 }
