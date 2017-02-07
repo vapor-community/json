@@ -65,6 +65,8 @@ extension Node {
             return .object(dictionary)
         case .string(let value):
             return .string(value)
+        case .date(let date):
+            return .string(date.description) // TODO: Decide if there is a Date format that is better for JSON format
         }
     }
 }
