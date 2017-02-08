@@ -2,7 +2,6 @@ import enum Jay.JSON
 import Node
 
 extension Jay.JSON {
-    
     func toNode() -> Node {
         switch self {
         case .array(let values):
@@ -35,7 +34,6 @@ extension Jay.JSON {
 }
 
 extension Node {
-    
     func toJSON() -> Jay.JSON {
         switch self {
         case .array(let values):
