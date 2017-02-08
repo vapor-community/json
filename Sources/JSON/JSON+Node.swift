@@ -43,7 +43,7 @@ extension Node {
         case .bool(let value):
             return .boolean(value)
         case .bytes(let bytes):
-            return .string(bytes.base64String)
+            return .string(bytes.base64Encoded.string)
         case .null:
             return .null
         case .number(let number):
@@ -65,6 +65,9 @@ extension Node {
             return .object(dictionary)
         case .string(let value):
             return .string(value)
+        case .date(let date):
+            let string = Date.outgoingDateFormatter.string(from: date)
+            return .string(string)
         }
     }
 }

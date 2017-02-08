@@ -7,7 +7,7 @@ let package = Package(
         .Package(url: "https://github.com/vapor/core.git", majorVersion: 1),
 
         // Data structure for converting between multiple representations
-        .Package(url: "https://github.com/vapor/node.git", majorVersion: 1),
+        .Package(url: "https://github.com/vapor/node.git", Version(0,0,0)),
 
         // The actual JSON parser
         .Package(url: "https://github.com/DanToml/Jay.git", majorVersion: 1)
