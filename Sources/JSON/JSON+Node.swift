@@ -2,7 +2,6 @@ import enum Jay.JSON
 import Node
 
 extension Jay.JSON {
-    
     func toNode() -> Node {
         switch self {
         case .array(let values):
@@ -35,7 +34,6 @@ extension Jay.JSON {
 }
 
 extension Node {
-    
     func toJSON() -> Jay.JSON {
         switch self {
         case .array(let values):
@@ -65,6 +63,9 @@ extension Node {
             return .object(dictionary)
         case .string(let value):
             return .string(value)
+        case .date(let date):
+            let string = Date.outgoingDateFormatter.string(from: date)
+            return .string(string)
         }
     }
 }

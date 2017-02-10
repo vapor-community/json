@@ -8,15 +8,23 @@ public enum JSONError: Error {
 
 extension JSON {
     public init(
+        serialized: BytesRepresentable,
+        allowComments: Bool = false,
+        allowFragments: Bool = false
+    ) throws {
+        let serialized = try serialized.makeBytes()
+        try self.init(serialized: serialized, allowComments: allowComments, allowFragments: allowFragments)
+    }
+
+    public init(
         serialized: Bytes,
         allowComments: Bool = false,
         allowFragments: Bool = false
     ) throws {
-
         guard !allowFragments else {
             throw JSONError.allowFragmentsNotSupported
         }
-        
+
         var parsing: Jay.ParsingOptions = []
         if allowComments {
             parsing.formUnion(.allowComments)
