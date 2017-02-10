@@ -17,7 +17,7 @@ class JSONTests: XCTestCase {
 
     func testParse() throws {
         let string = "{\"double\":3.14159265358979,\"object\":{\"nested\":\"text\"},\"array\":[true,1337,\"😄\"],\"int\":42,\"bool\":false,\"string\":\"ferret 🚀\"}"
-        let json = try JSON(bytes: string.bytes)
+        let json = try JSON(bytes: string)
 
         XCTAssertEqual(json["bool"]?.bool, false)
         XCTAssertEqual(json["string"]?.string, "ferret 🚀")
@@ -54,7 +54,7 @@ class JSONTests: XCTestCase {
     func testComments() throws {
         let string = " /* asdfg */ {\"1\":1}"
         do {
-            let parsed = try JSON(serialized: string.bytes, allowComments: true)
+            let parsed = try JSON(serialized: string, allowComments: true)
             XCTAssertEqual(parsed["1"]?.int, 1)
         } catch {
             XCTFail("Could not parse: \(error)")
@@ -64,7 +64,7 @@ class JSONTests: XCTestCase {
     func testCommentsSingle() throws {
         let string = " {\"1\":1 // test \n }"
         do {
-            let parsed = try JSON(serialized: string.bytes, allowComments: true)
+            let parsed = try JSON(serialized: string, allowComments: true)
             XCTAssertEqual(parsed["1"]?.int, 1)
         } catch {
             XCTFail("Could not parse: \(error)")
@@ -74,7 +74,7 @@ class JSONTests: XCTestCase {
     func testCommentsInternal() throws {
         let string = " {\"1\":\"/* comment */\"}"
         do {
-            let parsed = try JSON(serialized: string.bytes, allowComments: true)
+            let parsed = try JSON(serialized: string, allowComments: true)
             XCTAssertEqual(parsed["1"]?.string, "/* comment */")
         } catch {
             XCTFail("Could not parse: \(error)")
@@ -84,7 +84,7 @@ class JSONTests: XCTestCase {
     func testCrazyCommentInternal() throws {
         let string = "{\"1\": \"Here's a great comment quote \\\"/*why are people doing this*/\\\"\"}"
         do {
-            let parsed = try JSON(serialized: string.bytes, allowComments: true)
+            let parsed = try JSON(serialized: string, allowComments: true)
             XCTAssertEqual(parsed["1"]?.string, "Here's a great comment quote \"/*why are people doing this*/\"")
         } catch {
             XCTFail("Could not parse: \(error)")
