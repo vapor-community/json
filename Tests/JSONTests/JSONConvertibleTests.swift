@@ -13,11 +13,11 @@ class Person: JSONConvertible, NodeConvertible {
     }
 
     required init(node: Node, in context: Context) throws {
-        name = try node.extract("name")
-        age = try node.extract("age")
+        name = try node.get("name")
+        age = try node.get("age")
     }
 
-    func makeNode(context: Context = EmptyNode) throws -> Node {
+    func makeNode(in context: Context = EmptyNode) throws -> Node {
         return try Node(node: ["name": name, "age": age])
     }
 }
