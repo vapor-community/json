@@ -25,7 +25,8 @@ class Person: JSONConvertible, NodeConvertible {
 class JSONConvertibleTests: XCTestCase {
     static let allTests = [
         ("testJSONInitializable", testJSONInitializable),
-        ("testJSONRepresentable", testJSONRepresentable)
+        ("testJSONRepresentable", testJSONRepresentable),
+        ("testSequenceJSONRepresentable", testSequenceJSONRepresentable)
     ]
 
     func testJSONInitializable() throws {
