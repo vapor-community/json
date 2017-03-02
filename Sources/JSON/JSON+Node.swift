@@ -2,10 +2,10 @@ import enum Jay.JSON
 import Node
 
 extension Jay.JSON {
-    func toNode() -> Node {
+    func toSchema() -> Schema {
         switch self {
         case .array(let values):
-            return .array(values.map { $0.toNode() })
+            return .array(values.map { $0.toSchema() })
         case .boolean(let value):
             return .bool(value)
         case .null:
@@ -22,9 +22,9 @@ extension Jay.JSON {
             }
             return .number(num)
         case .object(let values):
-            var dictionary: [String: Node] = [:]
+            var dictionary: [String: Schema] = [:]
             for (key, value) in values {
-                dictionary[key] = value.toNode()
+                dictionary[key] = value.toSchema()
             }
             return .object(dictionary)
         case .string(let value):
@@ -33,7 +33,7 @@ extension Jay.JSON {
     }
 }
 
-extension Node {
+extension Schema {
     func toJSON() -> Jay.JSON {
         switch self {
         case .array(let values):

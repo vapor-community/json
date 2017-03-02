@@ -4,7 +4,7 @@ import Jay
 extension JSON {
     public func serialize(prettyPrint: Bool = false) throws -> Bytes {
         let formatting: Jay.Formatting = prettyPrint ? .prettified : .minified
-        let json = node.toJSON()
+        let json = schema.toJSON()
         return try Jay(formatting: formatting).dataFromJson(json: json)
     }
 }

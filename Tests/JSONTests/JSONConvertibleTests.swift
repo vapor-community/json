@@ -12,12 +12,12 @@ class Person: JSONConvertible, NodeConvertible {
         self.age = age
     }
 
-    required init(node: Node, in context: Context) throws {
+    required init(node: Node) throws {
         name = try node.get("name")
         age = try node.get("age")
     }
 
-    func makeNode(in context: Context = EmptyNode) throws -> Node {
+    func makeNode(in context: Context? = nil) throws -> Node {
         return try Node(node: ["name": name, "age": age])
     }
 }

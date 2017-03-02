@@ -15,7 +15,7 @@ private let _context = JSONContext()
 extension JSONRepresentable where Self: NodeRepresentable {
     public func makeJSON() throws -> JSON {
         let node = try makeNode(in: _context)
-        return try JSON(node: node)
+        return JSON(node: node)
     }
 }
 
