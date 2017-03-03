@@ -2,7 +2,7 @@ import enum Jay.JSON
 import Node
 
 extension Jay.JSON {
-    func toSchema() -> Schema {
+    func toSchema() -> StructuredData {
         switch self {
         case .array(let values):
             return .array(values.map { $0.toSchema() })
@@ -22,7 +22,7 @@ extension Jay.JSON {
             }
             return .number(num)
         case .object(let values):
-            var dictionary: [String: Schema] = [:]
+            var dictionary: [String: StructuredData] = [:]
             for (key, value) in values {
                 dictionary[key] = value.toSchema()
             }
@@ -33,7 +33,7 @@ extension Jay.JSON {
     }
 }
 
-extension Schema {
+extension StructuredData {
     func toJSON() -> Jay.JSON {
         switch self {
         case .array(let values):
