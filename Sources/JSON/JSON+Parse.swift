@@ -30,6 +30,6 @@ extension JSON {
             parsing.formUnion(.allowComments)
         }
         let json = try Jay(parsing: parsing).jsonFromData(serialized)
-        self = JSON(json.toSchema())
+        self = JSON(json.toStructuredData())
     }
 }
