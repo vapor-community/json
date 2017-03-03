@@ -115,7 +115,7 @@ class JSONTests: XCTestCase {
             huge["double_\(i)"] = 3.14159265358979
         }
 
-        hugeParsed = JSON(.object(huge))
+        hugeParsed = try! JSON(node: huge)
         hugeSerialized = try! hugeParsed.makeBytes()
     }
 

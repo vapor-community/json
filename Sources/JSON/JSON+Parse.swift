@@ -1,9 +1,9 @@
 import Core
 import Jay
 
-public enum JSONError: Error {
+public enum JSONError: Swift.Error {
     case allowFragmentsNotSupported
-    case parse(path: String, error: Error)
+    case parse(path: String, error: Swift.Error)
 }
 
 extension JSON {
@@ -30,6 +30,6 @@ extension JSON {
             parsing.formUnion(.allowComments)
         }
         let json = try Jay(parsing: parsing).jsonFromData(serialized)
-        self = JSON(json.toNode())
+        self = JSON(json.toStructuredData())
     }
 }
