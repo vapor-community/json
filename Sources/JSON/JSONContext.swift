@@ -13,3 +13,9 @@ extension Context {
         return true
     }
 }
+
+extension JSON {
+    public init() {
+        self.init(jsonContext)
+    }
+}
