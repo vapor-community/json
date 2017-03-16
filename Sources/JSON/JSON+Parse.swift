@@ -1,20 +1,19 @@
 import Core
-import Jay
 import Foundation
 
 
 extension JSON {
     public init(
-        serialized: BytesRepresentable,
+        bytes: BytesRepresentable,
         allowFragments: Bool = false
     ) throws {
-        let serialized = try serialized.makeBytes()
-        try self.init(serialized: serialized, allowFragments: allowFragments)
+        let bytes = try bytes.makeBytes()
+        try self.init(bytes: bytes, allowFragments: allowFragments)
     }
 
     public init(
-        serialized: Bytes,
-        allowFragments: Bool = false
+        bytes: Bytes,
+        allowFragments: Bool
     ) throws {
         let options: JSONSerialization.ReadingOptions
         if allowFragments {
@@ -23,24 +22,24 @@ extension JSON {
             options = .init(rawValue: 0)
         }
 
-        let data = Data(bytes: serialized)
-        let json = try JSONSerialization.jsonObject(with: data, options: options)
-        let structuredData = StructuredData(any: json)
+        let data = Data(bytes: bytes)
+        let json = try JSONSerialization.jsonObject(
+            with: data,
+            options: options
+        )
+        let structuredData = try StructuredData(json: json)
         self = JSON(structuredData)
     }
 }
 
 extension StructuredData {
-    /**
-     Attempt to initialize a node with a foundation object.
-
-     - warning: will default to null if unexpected value
-     - parameter any: the object to create a node from
-     - throws: if fails to create node.
-     */
-    public init(any: Any) {
-        switch any {
-            // If we're coming from foundation, it will be an `NSNumber`.
+    /// Attempt to initialize a node with a foundation object.
+    ///
+    /// - parameter any: the object to create a node from
+    /// - throws: if fails to create node.
+    public init(json: Any) throws {
+        switch json {
+        // If we're coming from foundation, it will be an `NSNumber`.
         //This represents double, integer, and boolean.
         case let number as Double:
             // When coming from ObjC Any, this will represent all Integer types and boolean
@@ -55,9 +54,9 @@ extension StructuredData {
         case let string as String:
             self = .string(string)
         case let object as [String : Any]:
-            self = StructuredData(any: object)
+            self = try StructuredData(json: object)
         case let array as [Any]:
-            self = .array(array.map(StructuredData.init))
+            self = try .array(array.map(StructuredData.init))
         case _ as NSNull:
             self = .null
         case let data as Data:
@@ -80,62 +79,31 @@ extension StructuredData {
      Initialize a node with a foundation dictionary
      - parameter any: the dictionary to initialize with
      */
-    public init(any: [String: Any]) {
+    public init(json: [String: Any]) throws {
         var mutable: [String: StructuredData] = [:]
-        any.forEach { key, val in
-            mutable[key] = StructuredData(any: val)
+        try json.forEach { key, val in
+            mutable[key] = try StructuredData(json: val)
         }
         self = .object(mutable)
     }
 
-    /**
-     Initialize a node with a foundation array
-     - parameter any: the array to initialize with
-     */
-    public init(any: [Any]) {
-        let array = any.map(StructuredData.init)
+    /// Initialize a node with a json array
+    /// - parameter any: the array to initialize with
+    public init(json: [Any]) throws {
+        let array = try json.map(StructuredData.init)
         self = .array(array)
     }
 
-    /**
-     Create an any representation of the node,
-     intended for Foundation environments.
-     */
-    public var any: Any {
-        switch self {
-        case .object(let ob):
-            var mapped: [String : Any] = [:]
-            ob.forEach { key, val in
-                mapped[key] = val.any
-            }
-            return mapped
-        case .array(let array):
-            return array.map { $0.any }
-        case .bool(let bool):
-            return bool
-        case .number(let number):
-            return number.double
-        case .string(let string):
-            return string
-        case .null:
-            return NSNull()
-        case .bytes(let bytes):
-            var bytes = bytes
-            let data = NSData(bytes: &bytes, length: bytes.count)
-            return data
-        case .date(let date):
-            return date
-        }
-    }
-
-    var json: Any {
+    /// Creates a FoundationJSON representation of the 
+    /// data for serialization w/ JSONSerialization
+    public var json: Any {
         switch self {
         case .array(let values):
             return values.map { $0.json }
         case .bool(let value):
             return value
         case .bytes(let bytes):
-            return bytes.base64Encoded.string
+            return bytes.base64Encoded.makeString()
         case .null:
             return NSNull()
         case .number(let number):

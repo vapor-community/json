@@ -38,9 +38,8 @@ class CompareTests: XCTestCase {
     func testFoundationPerformance() throws {
         var structure: StructuredData = .object([:])
         let time = try perf {
-            let data = Data(bytes: rawFile)
-            let blob = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
-            structure = StructuredData(any: blob)
+            let json = try JSON(bytes: rawFile)
+            structure = json.wrapped
         }
         print("First: \(structure.array!.first!)")
         print("It took Foundation \(time) seconds")
@@ -82,7 +81,7 @@ class JSONTests: XCTestCase {
             "array": JSON(node: [nil, true, 1337, "😄"])
         ])
 
-        let serialized = try json.makeBytes().string
+        let serialized = try json.makeBytes().makeString()
         XCTAssert(serialized.contains("\"bool\":false"))
         XCTAssert(serialized.contains("\"string\":\"ferret 🚀\""))
         XCTAssert(serialized.contains("\"int\":42"))
@@ -96,14 +95,14 @@ class JSONTests: XCTestCase {
             "hello": "world"
         ])
 
-        let serialized = try json.serialize(prettyPrint: true).string
+        let serialized = try json.serialize(prettyPrint: true).makeString()
         let expectation = "{\n  \"hello\" : \"world\"\n}"
         XCTAssertEqual(serialized, expectation)
     }
 
     func testStringEscaping() throws {
         let json = try JSON(node: ["he \r\n l \t l \n o w\"o\rrld "])
-        let data = try json.serialize().string
+        let data = try json.serialize().makeString()
         XCTAssertEqual(data, "[\"he \\r\\n l \\t l \\n o w\\\"o\\rrld \"]")
     }
 

@@ -1,5 +1,4 @@
 import Core
-import Jay
 import Foundation
 
 extension JSON {
@@ -12,7 +11,10 @@ extension JSON {
         }
 
         let json = wrapped.json
-        let data = try JSONSerialization.data(withJSONObject: json, options: options)
+        let data = try JSONSerialization.data(
+            withJSONObject: json,
+            options: options
+        )
         return data.makeBytes()
     }
 }
