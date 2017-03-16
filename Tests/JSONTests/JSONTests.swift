@@ -13,39 +13,6 @@ func perf(_ block: () throws -> Void) rethrows -> Double {
     return time
 }
 
-class CompareTests: XCTestCase {
-    static let allTests = [
-        ("testJayPerformance", testJayPerformance),
-        ("testFoundationPerformance", testFoundationPerformance),
-    ]
-
-    let rawFile: Bytes = {
-        let mockJSON = #file.components(separatedBy: "JSONTests")[0] + "JSONTests/MOCK_DATA.json"
-        let rawFile = try! DataFile.load(path: mockJSON)
-        return rawFile
-    }()
-
-    func testJayPerformance() throws {
-        var structure: StructuredData = .object([:])
-        let time = try perf {
-            let json = try JSON(bytes: rawFile)
-            structure = json.wrapped
-        }
-        print("First: \(structure.array!.first!)")
-        print("It took Jay \(time) seconds")
-    }
-
-    func testFoundationPerformance() throws {
-        var structure: StructuredData = .object([:])
-        let time = try perf {
-            let json = try JSON(bytes: rawFile)
-            structure = json.wrapped
-        }
-        print("First: \(structure.array!.first!)")
-        print("It took Foundation \(time) seconds")
-    }
-}
-
 class JSONTests: XCTestCase {
     static let allTests = [
         ("testParse", testParse),
