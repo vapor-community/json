@@ -1,10 +1,18 @@
 import Core
 import Jay
+import Foundation
 
 extension JSON {
     public func serialize(prettyPrint: Bool = false) throws -> Bytes {
-        let formatting: Jay.Formatting = prettyPrint ? .prettified : .minified
-        let json = wrapped.toJSON()
-        return try Jay(formatting: formatting).dataFromJson(json: json)
+        let options: JSONSerialization.WritingOptions
+        if prettyPrint {
+            options = .prettyPrinted
+        } else {
+            options = .init(rawValue: 0)
+        }
+
+        let json = wrapped.json
+        let data = try JSONSerialization.data(withJSONObject: json, options: options)
+        return data.makeBytes()
     }
 }
