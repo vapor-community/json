@@ -3,7 +3,7 @@ import XCTest
 @testable import JSONTests
 
 XCTMain([
-     testCase(JSONTests.allTests),
-     testCase(JSONConvertibleTests.allTests)
+    testCase(JSONTests.allTests),
+    testCase(JSONConvertibleTests.allTests)
 ])
 #endif

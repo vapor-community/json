@@ -1,16 +1,22 @@
+import Foundation
 import XCTest
 @testable import JSON
 import Core
 import Node
 
+@discardableResult
+func perf(_ block: () throws -> Void) rethrows -> Double {
+    let start = Date()
+    try block()
+    let end = Date()
+    let time = end.timeIntervalSince(start)
+    return time
+}
+
 class JSONTests: XCTestCase {
     static let allTests = [
         ("testParse", testParse),
         ("testSerialize", testSerialize),
-        ("testComments", testComments),
-        ("testCommentsSingle", testCommentsSingle),
-        ("testCommentsInternal", testCommentsInternal),
-        ("testCrazyCommentInternal", testCrazyCommentInternal),
         ("testSerializePerformance", testSerializePerformance),
         ("testParsePerformance", testParsePerformance),
     ]
@@ -30,19 +36,19 @@ class JSONTests: XCTestCase {
     }
 
     func testSerialize() throws {
-        let json = try JSON(node: [
+        let foo: [String: Any?] = [
             "null": nil,
             "bool": false,
             "string": "ferret 🚀",
             "int": 42,
             "double": 3.14159265358979,
-            "object": JSON(node: [
+            "object": [
                 "nested": "text"
-            ]),
-            "array": JSON(node: [nil, true, 1337, "😄"])
-        ])
-
-        let serialized = try json.makeBytes().string
+            ],
+            "array": [nil, true, 1337, "😄"] as [Any?]
+        ]
+        let json = try JSON(node: foo)
+        let serialized = try json.makeBytes().makeString()
         XCTAssert(serialized.contains("\"bool\":false"))
         XCTAssert(serialized.contains("\"string\":\"ferret 🚀\""))
         XCTAssert(serialized.contains("\"int\":42"))
@@ -51,58 +57,19 @@ class JSONTests: XCTestCase {
         XCTAssert(serialized.contains("\"array\":[null,true,1337,\"😄\"]"))
     }
 
-    func testComments() throws {
-        let string = " /* asdfg */ {\"1\":1}"
-        do {
-            let parsed = try JSON(serialized: string, allowComments: true)
-            XCTAssertEqual(parsed["1"]?.int, 1)
-        } catch {
-            XCTFail("Could not parse: \(error)")
-        }
-    }
-
-    func testCommentsSingle() throws {
-        let string = " {\"1\":1 // test \n }"
-        do {
-            let parsed = try JSON(serialized: string, allowComments: true)
-            XCTAssertEqual(parsed["1"]?.int, 1)
-        } catch {
-            XCTFail("Could not parse: \(error)")
-        }
-    }
-
-    func testCommentsInternal() throws {
-        let string = " {\"1\":\"/* comment */\"}"
-        do {
-            let parsed = try JSON(serialized: string, allowComments: true)
-            XCTAssertEqual(parsed["1"]?.string, "/* comment */")
-        } catch {
-            XCTFail("Could not parse: \(error)")
-        }
-    }
-
-    func testCrazyCommentInternal() throws {
-        let string = "{\"1\": \"Here's a great comment quote \\\"/*why are people doing this*/\\\"\"}"
-        do {
-            let parsed = try JSON(serialized: string, allowComments: true)
-            XCTAssertEqual(parsed["1"]?.string, "Here's a great comment quote \"/*why are people doing this*/\"")
-        } catch {
-            XCTFail("Could not parse: \(error)")
-        }
-    }
-
     func testPrettySerialize() throws {
         let json = try JSON(node: [
             "hello": "world"
         ])
 
-        let serialized = try json.serialize(prettyPrint: true).string
-        XCTAssertEqual(serialized, "{\n    \"hello\": \"world\"\n}")
+        let serialized = try json.serialize(prettyPrint: true).makeString()
+        let expectation = "{\n  \"hello\" : \"world\"\n}"
+        XCTAssertEqual(serialized, expectation)
     }
 
     func testStringEscaping() throws {
         let json = try JSON(node: ["he \r\n l \t l \n o w\"o\rrld "])
-        let data = try json.serialize().string
+        let data = try json.serialize().makeString()
         XCTAssertEqual(data, "[\"he \\r\\n l \\t l \\n o w\\\"o\\rrld \"]")
     }
 
@@ -119,21 +86,13 @@ class JSONTests: XCTestCase {
         hugeSerialized = try! hugeParsed.makeBytes()
     }
 
-    func testSerializePerformance() throws {
-        // debug 0.333
-        // release 0.291
-
-        // foundation 0.505 / 0.391
+    func testSerializePerformance() {
         measure {
             _ = try! self.hugeParsed.makeBytes()
         }
     }
 
     func testParsePerformance() throws {
-        // debug 0.885
-        // release 0.127
-
-        // foundation 1.060 / 0.777
         measure {
             _ = try! JSON(bytes: self.hugeSerialized)
         }
