@@ -10,7 +10,7 @@ extension Array: JSONConvertible {
         }
 
         let element = Element.self as! JSONInitializable.Type
-        let array = json.typeArray ?? [json]
+        let array = json.array ?? [json]
         let mapped = try array.map { try element.init(json: $0) as! Element }
         self = mapped
     }

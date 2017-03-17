@@ -11,7 +11,7 @@ extension Dictionary: JSONConvertible {
                 )
             }
 
-        let object = json.typeObject ?? [:]
+        let object = json.object ?? [:]
         let value = Value.self as! JSONInitializable.Type
 
         var mapped: [Key: Value] = [:]
