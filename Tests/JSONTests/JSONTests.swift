@@ -86,21 +86,13 @@ class JSONTests: XCTestCase {
         hugeSerialized = try! hugeParsed.makeBytes()
     }
 
-    func testSerializePerformance() throws {
-        // debug 0.333
-        // release 0.291
-
-        // foundation 0.505 / 0.391
+    func testSerializePerformance() {
         measure {
             _ = try! self.hugeParsed.makeBytes()
         }
     }
 
     func testParsePerformance() throws {
-        // debug 0.885
-        // release 0.127
-
-        // foundation 1.060 / 0.777
         measure {
             _ = try! JSON(bytes: self.hugeSerialized)
         }

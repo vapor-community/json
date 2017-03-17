@@ -3,6 +3,9 @@ import Foundation
 
 
 extension JSON {
+    /// Serialize JSON with something that can
+    /// be represented as bytes, for example,
+    /// 'Data'
     public init(
         bytes: BytesRepresentable,
         allowFragments: Bool = false
@@ -11,6 +14,8 @@ extension JSON {
         try self.init(bytes: bytes, allowFragments: allowFragments)
     }
 
+    /// Serialize JSON with the bytes representing
+    /// the JSON data
     public init(
         bytes: Bytes,
         allowFragments: Bool
@@ -37,7 +42,7 @@ extension StructuredData {
     ///
     /// - parameter any: the object to create a node from
     /// - throws: if fails to create node.
-    public init(json: Any) throws {
+    internal init(json: Any) throws {
         switch json {
         // If we're coming from foundation, it will be an `NSNumber`.
         //This represents double, integer, and boolean.
@@ -75,11 +80,9 @@ extension StructuredData {
         }
     }
 
-    /**
-     Initialize a node with a foundation dictionary
-     - parameter any: the dictionary to initialize with
-     */
-    public init(json: [String: Any]) throws {
+    /// Initialize a node with a foundation dictionary
+    /// - parameter any: the dictionary to initialize with
+    internal init(json: [String: Any]) throws {
         var mutable: [String: StructuredData] = [:]
         try json.forEach { key, val in
             mutable[key] = try StructuredData(json: val)
@@ -89,14 +92,14 @@ extension StructuredData {
 
     /// Initialize a node with a json array
     /// - parameter any: the array to initialize with
-    public init(json: [Any]) throws {
+    internal init(json: [Any]) throws {
         let array = try json.map(StructuredData.init)
         self = .array(array)
     }
 
     /// Creates a FoundationJSON representation of the 
     /// data for serialization w/ JSONSerialization
-    public var json: Any {
+    internal var json: Any {
         switch self {
         case .array(let values):
             return values.map { $0.json }
