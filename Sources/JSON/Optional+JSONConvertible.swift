@@ -1,5 +1,7 @@
 extension Optional: JSONConvertible {
     public init(json: JSON) throws {
+        // Check w/ `is` and cast later to
+        // workaround bug
         guard Wrapped.self is JSONInitializable.Type else {
             throw InvalidContainer(
                 container: "\(Optional.self)",

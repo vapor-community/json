@@ -1,5 +1,7 @@
 extension Array: JSONConvertible {
     public init(json: JSON) throws {
+        // Check w/ `is` and cast later to work around
+        // casting bug
         guard Element.self is JSONInitializable.Type else {
             throw InvalidContainer(
                 container: "\(Array.self)",

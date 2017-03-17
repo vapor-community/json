@@ -1,11 +1,15 @@
 extension Dictionary: JSONConvertible {
     public init(json: JSON) throws {
-        guard Key.self is String.Type, Value.self is JSONInitializable.Type else {
-            throw InvalidContainer(
-                container: "\(Dictionary.self)",
-                element: "\(Value.self)"
-            )
-        }
+        // check w/ `is` and cast later to work around casting bug
+        guard
+            Key.self is String.Type,
+            Value.self is JSONInitializable.Type
+            else {
+                throw InvalidContainer(
+                    container: "\(Dictionary.self)",
+                    element: "\(Value.self)"
+                )
+            }
 
         let object = json.typeObject ?? [:]
         let value = Value.self as! JSONInitializable.Type
