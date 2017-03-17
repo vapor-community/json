@@ -36,18 +36,18 @@ class JSONTests: XCTestCase {
     }
 
     func testSerialize() throws {
-        let json = try JSON(node: [
+        let foo: [String: Any?] = [
             "null": nil,
             "bool": false,
             "string": "ferret 🚀",
             "int": 42,
             "double": 3.14159265358979,
-            "object": JSON(node: [
+            "object": [
                 "nested": "text"
-            ]),
-            "array": JSON(node: [nil, true, 1337, "😄"])
-        ])
-
+            ],
+            "array": [nil, true, 1337, "😄"] as [Any?]
+        ]
+        let json = try JSON(node: foo)
         let serialized = try json.makeBytes().makeString()
         XCTAssert(serialized.contains("\"bool\":false"))
         XCTAssert(serialized.contains("\"string\":\"ferret 🚀\""))
