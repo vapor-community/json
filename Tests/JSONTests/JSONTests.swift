@@ -19,6 +19,9 @@ class JSONTests: XCTestCase {
         ("testSerialize", testSerialize),
         ("testSerializePerformance", testSerializePerformance),
         ("testParsePerformance", testParsePerformance),
+        ("testSerializeFragment", testSerializeFragment),
+        ("testSerializeDate", testSerializeDate),
+        ("testSerializeBytes", testSerializeBytes),
     ]
 
     func testParse() throws {
@@ -98,4 +101,25 @@ class JSONTests: XCTestCase {
         }
     }
 
+    func testSerializeFragment() throws {
+        let json = JSON("foo")
+        let bytes = try json.serialize()
+        XCTAssertEqual(bytes.makeString(), "\"foo\"")
+    }
+    
+    func testSerializeDate() throws {
+        let date = Date(timeIntervalSince1970: 1489927411)
+        let json = JSON(.date(date))
+        let bytes = try json.serialize()
+        XCTAssertEqual(bytes.makeString(), "\"2017-03-19T12:43:31.000Z\"")
+    }
+    
+    func testSerializeBytes() throws {
+        let input = "foo".makeBytes()
+        let json = JSON(.bytes(input))
+        let bytes = try json.serialize()
+        XCTAssertEqual(bytes.makeString(), "\"Zm9v\"")
+        let parsed = try JSON(bytes: bytes)
+        XCTAssertEqual(parsed.bytes?.base64Decoded.makeString(), "foo")
+    }
 }
