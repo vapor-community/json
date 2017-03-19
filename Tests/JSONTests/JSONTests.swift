@@ -98,4 +98,9 @@ class JSONTests: XCTestCase {
         }
     }
 
+    func testSerializeFragment() throws {
+        let json = JSON("foo")
+        let bytes = try json.serialize()
+        XCTAssertEqual(bytes.makeString(), "\"foo\"")
+    }
 }
