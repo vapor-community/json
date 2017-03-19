@@ -9,7 +9,8 @@ extension JSON {
         case .bool(let b):
             return b ? [.t, .r, .u, .e] : [.f, .a, .l, .s, .e]
         case .bytes(let b):
-            return b
+            let encoded = b.base64Encoded
+            return [.quote] + encoded + [.quote]
         case .date, .string:
             let bytes = string?.makeBytes() ?? []
             return [.quote] + bytes + [.quote]
