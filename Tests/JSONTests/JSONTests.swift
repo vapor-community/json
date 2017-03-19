@@ -19,6 +19,9 @@ class JSONTests: XCTestCase {
         ("testSerialize", testSerialize),
         ("testSerializePerformance", testSerializePerformance),
         ("testParsePerformance", testParsePerformance),
+        ("testSerializeFragment", testSerializeFragment),
+        ("testSerializeDate", testSerializeDate),
+        ("testSerializeBytes", testSerializeBytes),
     ]
 
     func testParse() throws {
