@@ -3,7 +3,7 @@ import XCTest
 import Core
 import Node
 
-extension JSONConvertible {
+extension JSONConvertible where Self: NodeConvertible {
     init(node: Node) throws {
         try self.init(json: JSON(node))
     }
@@ -13,7 +13,7 @@ extension JSONConvertible {
     }
 }
 
-class Person: JSONConvertible {
+class Person: JSONConvertible, NodeConvertible {
     let name: String
     let age: Int
 

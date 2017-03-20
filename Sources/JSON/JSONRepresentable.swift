@@ -1,10 +1,10 @@
 import Node
 
-public protocol JSONRepresentable: NodeRepresentable {
+public protocol JSONRepresentable {
     func makeJSON() throws -> JSON
 }
 
-public protocol JSONInitializable: NodeInitializable {
+public protocol JSONInitializable {
     init(json: JSON) throws
 }
 
