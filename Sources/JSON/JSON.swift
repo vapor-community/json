@@ -12,9 +12,3 @@ public struct JSON: StructuredDataWrapper {
         self.context = context ?? jsonContext
     }
 }
-
-extension JSON {
-    public init() {
-        self.init([:])
-    }
-}
