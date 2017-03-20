@@ -3,7 +3,17 @@ import XCTest
 import Core
 import Node
 
-class Person: JSONConvertible {
+extension JSONConvertible where Self: NodeConvertible {
+    init(node: Node) throws {
+        try self.init(json: JSON(node))
+    }
+
+    public func makeNode(in context: Context?) throws -> Node {
+        return try makeJSON().converted()
+    }
+}
+
+class Person: JSONConvertible, NodeConvertible {
     let name: String
     let age: Int
 
