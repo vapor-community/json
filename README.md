@@ -1,22 +1,20 @@
-# JSON
-
-![Swift](http://img.shields.io/badge/swift-3.0-brightgreen.svg)
-[![Build Status](https://travis-ci.org/vapor/json.svg?branch=master)](https://travis-ci.org/vapor/json)
-[![CircleCI](https://circleci.com/gh/vapor/json.svg?style=shield)](https://circleci.com/gh/vapor/json)
-[![Code Coverage](https://codecov.io/gh/vapor/json/branch/master/graph/badge.svg)](https://codecov.io/gh/vapor/json)
-[![Codebeat](https://codebeat.co/badges/a793ad97-47e3-40d9-82cf-2aafc516ef4e)](https://codebeat.co/projects/github-com-vapor-json)
-[![Slack Status](http://vapor.team/badge.svg)](http://vapor.team)
-
-JSON wrapper around [Node](https://github.com/vapor/node) using [Jay](https://github.com/dantoml/jay)'s pure swift, type-safe JSON parsing and serializing.
-
-## 📖 Documentation
-
-Visit the Vapor web framework's [documentation](http://docs.vapor.codes) for instructions on how to use this package.
-
-## 💧 Community
-
-Join the welcoming community of fellow Vapor developers in [slack](http://vapor.team).
-
-## 🔧 Compatibility
-
-This package has been tested on macOS and Ubuntu.
+<p align="center">
+    <img src="https://cloud.githubusercontent.com/assets/1977704/25426618/0aef76de-2a70-11e7-95a5-b78b5a7ddc5b.png" width="320" alt="JSON">
+    <br>
+    <br>
+    <a href="http://beta.docs.vapor.codes/json/package/">
+        <img src="http://img.shields.io/badge/read_the-docs-92A8D1.svg" alt="Documentation">
+    </a>
+    <a href="http://vapor.team">
+        <img src="http://vapor.team/badge.svg" alt="Slack Team">
+    </a>
+    <a href="LICENSE">
+        <img src="http://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License">
+    </a>
+    <a href="https://circleci.com/gh/vapor/json">
+        <img src="https://circleci.com/gh/vapor/json.svg?style=shield" alt="Continuous Integration">
+    </a>
+    <a href="https://swift.org">
+        <img src="http://img.shields.io/badge/swift-3.1-brightgreen.svg" alt="Swift 3.1">
+    </a>
+</center>
