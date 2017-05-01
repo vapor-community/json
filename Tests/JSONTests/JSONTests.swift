@@ -9,6 +9,7 @@ class JSONTests: XCTestCase {
         ("testSerialize", testSerialize),
         ("testSerializePerformance", testSerializePerformance),
         ("testParsePerformance", testParsePerformance),
+        ("testMultiThread", testMultiThread)
     ]
 
     func testParse() throws {
@@ -93,6 +94,14 @@ class JSONTests: XCTestCase {
         // foundation 1.060 / 0.777
         measure {
             _ = try! JSON(bytes: self.hugeSerialized)
+        }
+    }
+
+    func testMultiThread() throws {
+        for _ in 1...100 {
+            DispatchQueue.global().async {
+                let _ = try! JSON(bytes: self.hugeSerialized)
+            }
         }
     }
 
