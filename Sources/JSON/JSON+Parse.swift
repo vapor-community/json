@@ -7,8 +7,8 @@ extension JSON {
     /// 'Data'
     public init(
         bytes: BytesRepresentable,
-        allowFragments: Bool = false
-        ) throws {
+        allowFragments: Bool = true
+    ) throws {
         let bytes = try bytes.makeBytes()
         try self.init(bytes: bytes, allowFragments: allowFragments)
     }
@@ -18,7 +18,7 @@ extension JSON {
     public init(
         bytes: Bytes,
         allowFragments: Bool
-        ) throws {
+    ) throws {
         let options: JSONSerialization.ReadingOptions
         if allowFragments {
             options = .allowFragments
@@ -31,7 +31,7 @@ extension JSON {
             with: data,
             options: options
         )
-        let structuredData = try StructuredData(json: json)
+        let structuredData = try StructuredData(foundationJSON: json)
         self = JSON(structuredData)
     }
 }
@@ -41,8 +41,8 @@ extension StructuredData {
     ///
     /// - parameter any: the object to create a node from
     /// - throws: if fails to create node.
-    public init(json: Any) throws {
-        switch json {
+    internal init(foundationJSON: Any) throws {
+        switch foundationJSON {
             // If we're coming from foundation, it will be an `NSNumber`.
         //This represents double, integer, and boolean.
         case let number as Double:
@@ -58,7 +58,7 @@ extension StructuredData {
         case let string as String:
             self = .string(string)
         case let object as [String : Any]:
-            self = try StructuredData(json: object)
+            self = try StructuredData(foundationJSON: object)
         case let array as [Any]:
             self = try .array(array.map(StructuredData.init))
         case _ as NSNull:
@@ -81,27 +81,27 @@ extension StructuredData {
 
     /// Initialize a node with a foundation dictionary
     /// - parameter any: the dictionary to initialize with
-    public init(json: [String: Any]) throws {
+    internal init(foundationJSON: [String: Any]) throws {
         var mutable: [String: StructuredData] = [:]
-        try json.forEach { key, val in
-            mutable[key] = try StructuredData(json: val)
+        try foundationJSON.forEach { key, val in
+            mutable[key] = try StructuredData(foundationJSON: val)
         }
         self = .object(mutable)
     }
 
     /// Initialize a node with a json array
     /// - parameter any: the array to initialize with
-    public init(json: [Any]) throws {
-        let array = try json.map(StructuredData.init)
+    internal init(foundationJSON: [Any]) throws {
+        let array = try foundationJSON.map(StructuredData.init)
         self = .array(array)
     }
 
     /// Creates a FoundationJSON representation of the
     /// data for serialization w/ JSONSerialization
-    public var json: Any {
+    internal var foundationJSON: Any {
         switch self {
         case .array(let values):
-            return values.map { $0.json }
+            return values.map { $0.foundationJSON }
         case .bool(let value):
             return value
         case .bytes(let bytes):
@@ -120,7 +120,7 @@ extension StructuredData {
         case .object(let values):
             var dictionary: [String: Any] = [:]
             for (key, value) in values {
-                dictionary[key] = value.json
+                dictionary[key] = value.foundationJSON
             }
             return dictionary
         case .string(let value):

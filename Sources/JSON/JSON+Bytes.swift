@@ -6,6 +6,6 @@ extension JSON: BytesConvertible {
     }
 
     public init(bytes: Bytes) throws {
-        try self.init(bytes: bytes, allowFragments: false)
+        try self.init(bytes: bytes, allowFragments: true)
     }
 }
