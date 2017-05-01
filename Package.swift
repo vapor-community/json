@@ -10,8 +10,5 @@ let package = Package(
 
         // Data structure for converting between multiple representations
         .Package(url: "https://github.com/vapor/node.git", beta),
-
-        // The actual JSON parser
-        .Package(url: "https://github.com/DanToml/Jay.git", majorVersion: 1)
     ]
 )

@@ -2,17 +2,15 @@ import XCTest
 @testable import JSON
 import Core
 import Node
+import Dispatch
 
 class JSONTests: XCTestCase {
     static let allTests = [
         ("testParse", testParse),
         ("testSerialize", testSerialize),
-        ("testComments", testComments),
-        ("testCommentsSingle", testCommentsSingle),
-        ("testCommentsInternal", testCommentsInternal),
-        ("testCrazyCommentInternal", testCrazyCommentInternal),
         ("testSerializePerformance", testSerializePerformance),
         ("testParsePerformance", testParsePerformance),
+        ("testMultiThread", testMultiThread)
     ]
 
     func testParse() throws {
@@ -51,53 +49,14 @@ class JSONTests: XCTestCase {
         XCTAssert(serialized.contains("\"array\":[null,true,1337,\"😄\"]"))
     }
 
-    func testComments() throws {
-        let string = " /* asdfg */ {\"1\":1}"
-        do {
-            let parsed = try JSON(serialized: string, allowComments: true)
-            XCTAssertEqual(parsed["1"]?.int, 1)
-        } catch {
-            XCTFail("Could not parse: \(error)")
-        }
-    }
-
-    func testCommentsSingle() throws {
-        let string = " {\"1\":1 // test \n }"
-        do {
-            let parsed = try JSON(serialized: string, allowComments: true)
-            XCTAssertEqual(parsed["1"]?.int, 1)
-        } catch {
-            XCTFail("Could not parse: \(error)")
-        }
-    }
-
-    func testCommentsInternal() throws {
-        let string = " {\"1\":\"/* comment */\"}"
-        do {
-            let parsed = try JSON(serialized: string, allowComments: true)
-            XCTAssertEqual(parsed["1"]?.string, "/* comment */")
-        } catch {
-            XCTFail("Could not parse: \(error)")
-        }
-    }
-
-    func testCrazyCommentInternal() throws {
-        let string = "{\"1\": \"Here's a great comment quote \\\"/*why are people doing this*/\\\"\"}"
-        do {
-            let parsed = try JSON(serialized: string, allowComments: true)
-            XCTAssertEqual(parsed["1"]?.string, "Here's a great comment quote \"/*why are people doing this*/\"")
-        } catch {
-            XCTFail("Could not parse: \(error)")
-        }
-    }
-
     func testPrettySerialize() throws {
         let json = try JSON(node: [
             "hello": "world"
-        ])
+            ])
 
         let serialized = try json.serialize(prettyPrint: true).makeString()
-        XCTAssertEqual(serialized, "{\n    \"hello\": \"world\"\n}")
+        let expectation = "{\n  \"hello\" : \"world\"\n}"
+        XCTAssertEqual(serialized, expectation)
     }
 
     func testStringEscaping() throws {
@@ -136,6 +95,14 @@ class JSONTests: XCTestCase {
         // foundation 1.060 / 0.777
         measure {
             _ = try! JSON(bytes: self.hugeSerialized)
+        }
+    }
+
+    func testMultiThread() throws {
+        for _ in 1...100 {
+            DispatchQueue.global().async {
+                let _ = try! JSON(bytes: self.hugeSerialized)
+            }
         }
     }
 
