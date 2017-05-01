@@ -13,6 +13,7 @@ class JSONTests: XCTestCase {
         ("testCrazyCommentInternal", testCrazyCommentInternal),
         ("testSerializePerformance", testSerializePerformance),
         ("testParsePerformance", testParsePerformance),
+        ("testPermit", testPermit),
     ]
 
     func testParse() throws {
@@ -104,6 +105,17 @@ class JSONTests: XCTestCase {
         let json = try JSON(node: ["he \r\n l \t l \n o w\"o\rrld "])
         let data = try json.serialize().makeString()
         XCTAssertEqual(data, "[\"he \\r\\n l \\t l \\n o w\\\"o\\rrld \"]")
+    }
+    
+    func testPermit() throws {
+        let json = try JSON(node: [
+            "hello": "world",
+            "from": "🚀"
+        ])
+        
+        let saneJson = json.permit(["hello"])
+        XCTAssertEqual(saneJson["hello"]?.string, "world")
+        XCTAssertEqual(saneJson["from"]?.string, nil)
     }
 
     var hugeParsed: JSON!
