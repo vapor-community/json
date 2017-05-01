@@ -2,6 +2,7 @@ import XCTest
 @testable import JSON
 import Core
 import Node
+import Dispatch
 
 class JSONTests: XCTestCase {
     static let allTests = [
