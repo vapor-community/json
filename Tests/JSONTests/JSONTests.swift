@@ -1,7 +1,7 @@
 import XCTest
 @testable import JSON
 import Core
-import Node
+import NodeFuzzy
 import Dispatch
 
 class JSONTests: XCTestCase {
@@ -53,9 +53,14 @@ class JSONTests: XCTestCase {
     }
 
     func testPrettySerialize() throws {
-        let json = try JSON(node: [
-            "hello": "world"
-            ])
+
+        let json = JSON(node:
+            .object(
+                [
+                    "hello": "world"
+                ]
+            )
+        )
 
         let serialized = try json.serialize(prettyPrint: true).makeString()
         let expectation = "{\n  \"hello\" : \"world\"\n}"
@@ -63,7 +68,7 @@ class JSONTests: XCTestCase {
     }
 
     func testStringEscaping() throws {
-        let json = try JSON(node: ["he \r\n l \t l \n o w\"o\rrld "])
+        let json = JSON(node: .array(["he \r\n l \t l \n o w\"o\rrld "]))
         let data = try json.serialize().makeString()
         XCTAssertEqual(data, "[\"he \\r\\n l \\t l \\n o w\\\"o\\rrld \"]")
     }
@@ -72,33 +77,37 @@ class JSONTests: XCTestCase {
     var hugeSerialized: Bytes!
 
     override func setUp() {
-        var huge: [String: Node] = [:]
+        var huge: [String: JSON] = [:]
         for i in 0 ... 100_000 {
             huge["double_\(i)"] = 3.14159265358979
         }
 
-        hugeParsed = try! JSON(node: huge)
+        hugeParsed = JSON.object(huge)
         hugeSerialized = try! hugeParsed.makeBytes()
     }
 
     func testSerializePerformance() throws {
-        // debug 0.333
-        // release 0.291
+        #if XCODE
+            // debug 0.333
+            // release 0.291
 
-        // foundation 0.505 / 0.391
-        measure {
-            _ = try! self.hugeParsed.makeBytes()
-        }
+            // foundation 0.505 / 0.391
+            measure {
+                _ = try! self.hugeParsed.makeBytes()
+            }
+        #endif
     }
 
     func testParsePerformance() throws {
-        // debug 0.885
-        // release 0.127
+        #if XCODE
+            // debug 0.885
+            // release 0.127
 
-        // foundation 1.060 / 0.777
-        measure {
-            _ = try! JSON(bytes: self.hugeSerialized)
-        }
+            // foundation 1.060 / 0.777
+            measure {
+                _ = try! JSON(bytes: self.hugeSerialized)
+            }
+        #endif
     }
 
     func testMultiThread() throws {

@@ -27,7 +27,10 @@ class Person: JSONConvertible, NodeConvertible {
     }
 
     func makeJSON() throws -> JSON {
-        return try JSON(node: ["name": name, "age": age])
+        var json = JSON([:])
+        try json.set("name", name)
+        try json.set("age", age)
+        return json
     }
 }
 
@@ -39,7 +42,9 @@ class JSONConvertibleTests: XCTestCase {
     ]
 
     func testJSONInitializable() throws {
-        let json = try JSON(node: ["name": "human-name", "age": 25])
+        var json = JSON()
+        try json.set("name", "human-name")
+        try json.set("age", 25)
         let person = try Person(node: json)
         XCTAssert(person.name == "human-name")
         XCTAssert(person.age == 25)
@@ -54,7 +59,8 @@ class JSONConvertibleTests: XCTestCase {
     
     func testSequenceJSONRepresentable() throws {
         let people = [Person(name: "human-name", age: 25), Person(name: "other-human-name", age: 27)]
-        let json = try people.makeNode(in: jsonContext)
+        let array = try people.map { try $0.makeNode(in: jsonContext) }
+        let json = JSON.array(array)
         XCTAssert(json[0]?["name"]?.string == "human-name")
         XCTAssert(json[0]?["age"]?.int == 25)
         XCTAssert(json[1]?["name"]?.string == "other-human-name")

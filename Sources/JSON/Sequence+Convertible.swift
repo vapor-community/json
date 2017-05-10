@@ -2,6 +2,9 @@ import Node
 
 extension Sequence where Iterator.Element: JSONRepresentable {
     public func makeJSON() throws -> JSON {
-        return try JSON(node: self.map { try $0.makeJSON() })
+        let json: [StructuredData] = try map {
+            try $0.makeJSON().wrapped
+        }
+        return JSON(.array(json))
     }
 }
