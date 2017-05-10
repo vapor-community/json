@@ -87,23 +87,27 @@ class JSONTests: XCTestCase {
     }
 
     func testSerializePerformance() throws {
-        // debug 0.333
-        // release 0.291
+        #if XCODE
+            // debug 0.333
+            // release 0.291
 
-        // foundation 0.505 / 0.391
-        measure {
-            _ = try! self.hugeParsed.makeBytes()
-        }
+            // foundation 0.505 / 0.391
+            measure {
+                _ = try! self.hugeParsed.makeBytes()
+            }
+        #endif
     }
 
     func testParsePerformance() throws {
-        // debug 0.885
-        // release 0.127
+        #if XCODE
+            // debug 0.885
+            // release 0.127
 
-        // foundation 1.060 / 0.777
-        measure {
-            _ = try! JSON(bytes: self.hugeSerialized)
-        }
+            // foundation 1.060 / 0.777
+            measure {
+                _ = try! JSON(bytes: self.hugeSerialized)
+            }
+        #endif
     }
 
     func testMultiThread() throws {
