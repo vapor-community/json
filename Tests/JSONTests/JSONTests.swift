@@ -31,17 +31,17 @@ class JSONTests: XCTestCase {
     }
 
     func testSerialize() throws {
-        let json = try JSON(node: [
+        var json = JSON(node: [
             "null": nil,
             "bool": false,
             "string": "ferret 🚀",
             "int": 42,
             "double": 3.14159265358979,
-            "object": JSON(node: [
+            "object": [
                 "nested": "text"
-            ]),
-            "array": JSON(node: [nil, true, 1337, "😄"])
+            ]
         ])
+        try json.set("array", [nil, true, 1337, "😄"])
 
         let serialized = try json.makeBytes().makeString()
         XCTAssert(serialized.contains("\"bool\":false"))
@@ -77,6 +77,8 @@ class JSONTests: XCTestCase {
     var hugeSerialized: Bytes!
 
     override func setUp() {
+        Node.fuzzy = [Node.self]
+        
         var huge: [String: JSON] = [:]
         for i in 0 ... 100_000 {
             huge["double_\(i)"] = 3.14159265358979
