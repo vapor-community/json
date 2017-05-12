@@ -3,7 +3,7 @@ import XCTest
 import Core
 import Node
 
-class Person: JSONConvertible, NodeConvertible {
+class Person: JSONConvertible {
     let name: String
     let age: Int
 
@@ -77,6 +77,22 @@ class JSONConvertibleTests: XCTestCase {
         try! json.set("person", person)
         // try! json.set("persons", [person])
         print(json)
+    }
+    
+    func testGetters() throws {
+        var json = JSON()
+        
+        try json.set("people", [
+            ["name": "Albert", "age": 92],
+            ["name": "Gertrude", "age": 109]
+        ])
+        
+        let people: [Person] = try! json.get("people")
+        XCTAssertEqual(people.count, 2)
+        
+        for person in people {
+            print(person.name)
+        }
     }
 
 }

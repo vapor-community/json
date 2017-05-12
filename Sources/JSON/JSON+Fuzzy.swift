@@ -21,6 +21,7 @@ extension JSON: FuzzyConverter {
             return nil
         }
         
+        
         guard let type = T.self as? JSONInitializable.Type else {
             return nil
         }
