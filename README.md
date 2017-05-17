@@ -2,7 +2,7 @@
     <img src="https://cloud.githubusercontent.com/assets/1977704/25426618/0aef76de-2a70-11e7-95a5-b78b5a7ddc5b.png" width="320" alt="JSON">
     <br>
     <br>
-    <a href="http://beta.docs.vapor.codes/json/package/">
+    <a href="https://docs.vapor.codes/json/package/">
         <img src="http://img.shields.io/badge/read_the-docs-92A8D1.svg" alt="Documentation">
     </a>
     <a href="http://vapor.team">

@@ -1,7 +1,7 @@
 import XCTest
 @testable import JSON
 import Core
-import NodeFuzzy
+import Node
 import Dispatch
 
 class JSONTests: XCTestCase {
