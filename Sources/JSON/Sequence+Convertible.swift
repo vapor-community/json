@@ -1,5 +1,3 @@
-import Node
-
 extension Sequence where Iterator.Element: JSONRepresentable {
     public func makeJSON() throws -> JSON {
         let json: [StructuredData] = try map {

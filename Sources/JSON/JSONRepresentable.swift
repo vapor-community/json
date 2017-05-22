@@ -1,5 +1,3 @@
-import Node
-
 public protocol JSONRepresentable {
     func makeJSON() throws -> JSON
 }
