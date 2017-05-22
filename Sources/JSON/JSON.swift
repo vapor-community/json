@@ -1,6 +1,11 @@
 import Foundation
 import Core
-@_exported import Node
+
+#if COCOAPODS
+    @_exported import NodeCocoapods
+#else
+    @_exported import Node
+#endif
 
 public struct JSON: StructuredDataWrapper {
     public static var defaultContext: Context? = jsonContext

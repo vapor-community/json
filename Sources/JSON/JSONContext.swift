@@ -1,5 +1,3 @@
-import Node
-
 public final class JSONContext: Context {
     internal static let shared = JSONContext()
     fileprivate init() {}
