@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
-  spec.name         = 'JSON'
-  spec.version      = '2.0.0'
+  spec.name         = 'JSONCocoapods'
+  spec.version      = '2.0.1'
   spec.license      = 'MIT'
   spec.homepage     = 'https://github.com/vapor/core'
   spec.authors      = { 'Vapor' => 'contact@vapor.codes' }
   spec.summary      = 'Core extensions, type-aliases, and functions that facilitate common tasks.'
-  spec.source       = { :git => "#{spec.homepage}.git", :tag => "2.0.0" }
+  spec.source       = { :git => "#{spec.homepage}.git", :tag => "#{spec.version}" }
   spec.ios.deployment_target = "8.0"
   spec.osx.deployment_target = "10.10"
   spec.watchos.deployment_target = "2.0"
