@@ -1,8 +1,8 @@
 Pod::Spec.new do |spec|
   spec.name         = 'JSONCocoapods'
-  spec.version      = '2.0.1'
+  spec.version      = '2.0.2'
   spec.license      = 'MIT'
-  spec.homepage     = 'https://github.com/vapor/core'
+  spec.homepage     = 'https://github.com/vapor/json'
   spec.authors      = { 'Vapor' => 'contact@vapor.codes' }
   spec.summary      = 'Core extensions, type-aliases, and functions that facilitate common tasks.'
   spec.source       = { :git => "#{spec.homepage}.git", :tag => "#{spec.version}" }
