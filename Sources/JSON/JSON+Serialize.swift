@@ -2,10 +2,10 @@ import Core
 import Foundation
 
 extension JSON {
-    public func serialize(prettyPrint: Bool = false, sortedKeys: Bool = false) throws -> Bytes {
+    public func serialize(prettyPrint: Bool = false) throws -> Bytes {
         switch wrapped {
         case .array, .object:
-            return try _nsSerialize(prettyPrint: prettyPrint, sortedKeys: sortedKeys)
+            return try _nsSerialize(prettyPrint: prettyPrint)
         case .bool(let b):
             return b ? [.t, .r, .u, .e] : [.f, .a, .l, .s, .e]
         case .bytes(let b):
@@ -21,13 +21,12 @@ extension JSON {
         }
     }
     
-    private func _nsSerialize(prettyPrint: Bool, sortedKeys: Bool) throws -> Bytes {
-        var options = JSONSerialization.WritingOptions()
+    private func _nsSerialize(prettyPrint: Bool) throws -> Bytes {
+        let options: JSONSerialization.WritingOptions
         if prettyPrint {
-            options.insert(.prettyPrinted)
-        }
-        if sortedKeys {
-            options.insert(.sortedKeys)
+            options = .prettyPrinted
+        } else {
+            options = .init(rawValue: 0)
         }
 
         let data = try JSONSerialization.data(
