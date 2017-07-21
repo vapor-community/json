@@ -31,7 +31,7 @@ class JSONTests: XCTestCase {
     }
 
     func testSerialize() throws {
-        var json = JSON(node: [
+        var json = try JSON(node: [
             "null": nil,
             "bool": false,
             "string": "ferret 🚀",
