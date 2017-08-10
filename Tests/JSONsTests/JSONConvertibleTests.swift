@@ -1,7 +1,6 @@
 import XCTest
-@testable import JSON
+import JSONs
 import Core
-import Node
 
 class Person: JSONConvertible {
     let name: String
@@ -18,19 +17,10 @@ class Person: JSONConvertible {
     }
 
     func makeJSON() throws -> JSON {
-        var json = JSON([:])
-        try json.set("name", name)
-        try json.set("age", age)
+        var json = JSON()
+        try json.set("name", to: name)
+        try json.set("age", to: age)
         return json
-    }
-    
-    required init(node: Node) throws {
-        self.name = "node"
-        self.age = 15
-    }
-    
-    func makeNode(in context: Context?) throws -> Node {
-        return Node(["foo": "bar"])
     }
 }
 
@@ -40,15 +30,11 @@ class JSONConvertibleTests: XCTestCase {
         ("testJSONRepresentable", testJSONRepresentable),
         ("testSequenceJSONRepresentable", testSequenceJSONRepresentable)
     ]
-    
-    override func setUp() {
-        Node.fuzzy = [JSON.self, Node.self]
-    }
 
     func testJSONInitializable() throws {
         var json = JSON()
-        try json.set("name", "human-name")
-        try json.set("age", 25)
+        try json.set("name", to: "human-name")
+        try json.set("age", to: 25)
         let person = try Person(json: json)
         XCTAssert(person.name == "human-name")
         XCTAssert(person.age == 25)
@@ -74,18 +60,18 @@ class JSONConvertibleTests: XCTestCase {
     func testSetters() throws {
         let person: Person? = Person(name: "human-name", age: 25)
         var json = JSON()
-        try! json.set("person", person)
+        try! json.set("person", to: person)
         // try! json.set("persons", [person])
         print(json)
     }
     
     func testGetters() throws {
         var json = JSON()
-        
-        try json.set("people", [
-            ["name": "Albert", "age": 92],
-            ["name": "Gertrude", "age": 109]
-        ])
+
+        try json.set("people", 0, "name", to: "Albert")
+        try json.set("people", 0, "age", to: 92)
+        try json.set("people", 1, "name", to: "Gertrude")
+        try json.set("people", 1, "age", to: 109)
         
         let people: [Person] = try! json.get("people")
         XCTAssertEqual(people.count, 2)

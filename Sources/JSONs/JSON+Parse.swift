@@ -31,12 +31,12 @@ extension JSON {
             with: data,
             options: options
         )
-        let structuredData = try StructuredData(foundationJSON: json)
-        self = JSON(structuredData)
+
+        try self.init(foundationJSON: json)
     }
 }
 
-extension StructuredData {
+extension JSON {
     /// Attempt to initialize a node with a foundation object.
     ///
     /// - parameter any: the object to create a node from
@@ -47,53 +47,38 @@ extension StructuredData {
         //This represents double, integer, and boolean.
         case let number as Double:
             // When coming from ObjC Any, this will represent all Integer types and boolean
-            self = .number(Number(number))
+            self = .double(number)
         // Here to catch 'Any' type, but MUST come AFTER 'Double' check for JSON fuzziness
         case let bool as Bool:
             self = .bool(bool)
         case let int as Int:
-            self = .number(Number(int))
-        case let uint as UInt:
-            self = .number(Number(uint))
+            self = .int(int)
         case let string as String:
             self = .string(string)
         case let object as [String : Any]:
-            self = try StructuredData(foundationJSON: object)
+            var mutable: [String: JSON] = [:]
+            try object.forEach { key, val in
+                mutable[key] = try JSON(foundationJSON: val)
+            }
+            self = .object(mutable)
         case let array as [Any]:
-            self = try .array(array.map(StructuredData.init))
+            self = try .array(array.map(JSON.init))
         case _ as NSNull:
             self = .null
         case let data as Data:
-            self = .bytes(data.makeBytes())
+            self = .string(data.makeString())
         case let bytes as NSData:
-            var raw = [UInt8](repeating: 0, count: bytes.length)
+            var raw = Bytes(repeating: 0, count: bytes.length)
             bytes.getBytes(&raw, length: bytes.length)
-            self = .bytes(raw)
+            self = .string(raw.makeString())
         case let date as Date:
-            self = .date(date)
+            self = .double(date.timeIntervalSince1970)
         case let date as NSDate:
             let date = Date(timeIntervalSince1970: date.timeIntervalSince1970)
-            self = .date(date)
+            self = .double(date.timeIntervalSince1970)
         default:
             self = .null
         }
-    }
-
-    /// Initialize a node with a foundation dictionary
-    /// - parameter any: the dictionary to initialize with
-    internal init(foundationJSON: [String: Any]) throws {
-        var mutable: [String: StructuredData] = [:]
-        try foundationJSON.forEach { key, val in
-            mutable[key] = try StructuredData(foundationJSON: val)
-        }
-        self = .object(mutable)
-    }
-
-    /// Initialize a node with a json array
-    /// - parameter any: the array to initialize with
-    internal init(foundationJSON: [Any]) throws {
-        let array = try foundationJSON.map(StructuredData.init)
-        self = .array(array)
     }
 
     /// Creates a FoundationJSON representation of the
@@ -104,19 +89,12 @@ extension StructuredData {
             return values.map { $0.foundationJSON }
         case .bool(let value):
             return value
-        case .bytes(let bytes):
-            return bytes.base64Encoded.makeString()
         case .null:
             return NSNull()
-        case .number(let number):
-            switch number {
-            case .double(let value):
-                return value
-            case .int(let value):
-                return value
-            case .uint(let value):
-                return value
-            }
+        case .int(let int):
+            return int
+        case .double(let double):
+            return double
         case .object(let values):
             var dictionary: [String: Any] = [:]
             for (key, value) in values {
@@ -125,9 +103,6 @@ extension StructuredData {
             return dictionary
         case .string(let value):
             return value
-        case .date(let date):
-            let string = Date.outgoingDateFormatter.string(from: date)
-            return string
         }
     }
 }

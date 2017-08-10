@@ -3,18 +3,15 @@ import Foundation
 
 extension JSON {
     public func serialize(prettyPrint: Bool = false) throws -> Bytes {
-        switch wrapped {
+        switch self {
         case .array, .object:
             return try _nsSerialize(prettyPrint: prettyPrint)
         case .bool(let b):
             return b ? [.t, .r, .u, .e] : [.f, .a, .l, .s, .e]
-        case .bytes(let b):
-            let encoded = b.base64Encoded
-            return [.quote] + encoded + [.quote]
-        case .date, .string:
+        case .string:
             let bytes = string?.makeBytes() ?? []
             return [.quote] + bytes + [.quote]
-        case .number:
+        case .int, .double:
             return string?.makeBytes() ?? []
         case .null:
             return [.n, .u, .l, .l]
@@ -30,7 +27,7 @@ extension JSON {
         }
 
         let data = try JSONSerialization.data(
-            withJSONObject: wrapped.foundationJSON,
+            withJSONObject: foundationJSON,
             options: options
         )
         return data.makeBytes()
