@@ -1,21 +1,9 @@
 import XCTest
-@testable import JSON
+import JSON
 import Core
-import Node
 import Dispatch
 
 class JSONTests: XCTestCase {
-    static let allTests = [
-        ("testParse", testParse),
-        ("testSerialize", testSerialize),
-        ("testSerializePerformance", testSerializePerformance),
-        ("testParsePerformance", testParsePerformance),
-        ("testMultiThread", testMultiThread),
-        ("testSerializeFragment", testSerializeFragment),
-        ("testSerializeDate", testSerializeDate),
-        ("testSerializeBytes", testSerializeBytes)
-    ]
-
     func testParse() throws {
         let string = "{\"double\":3.14159265358979,\"object\":{\"nested\":\"text\"},\"array\":[true,1337,\"😄\"],\"int\":42,\"bool\":false,\"string\":\"ferret 🚀\"}"
         let json = try JSON(bytes: string)
@@ -31,17 +19,17 @@ class JSONTests: XCTestCase {
     }
 
     func testSerialize() throws {
-        var json = try JSON(node: [
-            "null": nil,
-            "bool": false,
-            "string": "ferret 🚀",
-            "int": 42,
-            "double": 3.14159265358979,
-            "object": [
-                "nested": "text"
-            ]
+        var json: JSON = .object([
+            "null": .null,
+            "bool": .bool(false),
+            "string": .string("ferret 🚀"),
+            "int": .int(42),
+            "double": .double(3.14159265358979),
+            "object": .object([
+                "nested": .string("text")
+            ])
         ])
-        try json.set("array", [nil, true, 1337, "😄"])
+        try json.set("array", to: JSON.array([.null, .bool(true), .int(1337), .string("😄")]))
 
         let serialized = try json.makeBytes().makeString()
         XCTAssert(serialized.contains("\"bool\":false"))
@@ -53,14 +41,9 @@ class JSONTests: XCTestCase {
     }
 
     func testPrettySerialize() throws {
-
-        let json = JSON(node:
-            .object(
-                [
-                    "hello": "world"
-                ]
-            )
-        )
+        let json = try JSON([
+            "hello": "world"
+        ])
 
         let serialized = try json.serialize(prettyPrint: true).makeString()
         let expectation = "{\n  \"hello\" : \"world\"\n}"
@@ -68,7 +51,7 @@ class JSONTests: XCTestCase {
     }
 
     func testStringEscaping() throws {
-        let json = JSON(node: .array(["he \r\n l \t l \n o w\"o\rrld "]))
+        let json = try JSON(["he \r\n l \t l \n o w\"o\rrld "])
         let data = try json.serialize().makeString()
         XCTAssertEqual(data, "[\"he \\r\\n l \\t l \\n o w\\\"o\\rrld \"]")
     }
@@ -77,11 +60,9 @@ class JSONTests: XCTestCase {
     var hugeSerialized: Bytes!
 
     override func setUp() {
-        Node.fuzzy = [Node.self]
-        
         var huge: [String: JSON] = [:]
         for i in 0 ... 100_000 {
-            huge["double_\(i)"] = 3.14159265358979
+            huge["double_\(i)"] = .double(3.14159265358979)
         }
 
         hugeParsed = JSON.object(huge)
@@ -121,24 +102,17 @@ class JSONTests: XCTestCase {
     }
     
     func testSerializeFragment() throws {
-        let json = JSON("foo")
+        let json = try JSON("foo")
         let bytes = try json.serialize()
         XCTAssertEqual(bytes.makeString(), "\"foo\"")
     }
-    
-    func testSerializeDate() throws {
-        let date = Date(timeIntervalSince1970: 1489927411)
-        let json = JSON(.date(date))
-        let bytes = try json.serialize()
-        XCTAssertEqual(bytes.makeString(), "\"2017-03-19T12:43:31.000Z\"")
-    }
-    
-    func testSerializeBytes() throws {
-        let input = "foo".makeBytes()
-        let json = JSON(.bytes(input))
-        let bytes = try json.serialize()
-        XCTAssertEqual(bytes.makeString(), "\"Zm9v\"")
-        let parsed = try JSON(bytes: bytes)
-        XCTAssertEqual(parsed.bytes?.base64Decoded.makeString(), "foo")
-    }
+
+    static let allTests = [
+        ("testParse", testParse),
+        ("testSerialize", testSerialize),
+        ("testSerializePerformance", testSerializePerformance),
+        ("testParsePerformance", testParsePerformance),
+        ("testMultiThread", testMultiThread),
+        ("testSerializeFragment", testSerializeFragment),
+    ]
 }
