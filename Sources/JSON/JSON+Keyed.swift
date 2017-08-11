@@ -3,7 +3,7 @@ import Mapper
 // MARK: keyed
 
 extension JSON: Keyed {
-    public var empty: JSON { return .object([:]) }
+    public static var empty: JSON { return .object([:]) }
 
     public mutating func set(key: PathComponent, to value: JSON?) {
         switch key {

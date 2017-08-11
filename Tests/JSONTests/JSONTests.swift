@@ -1,5 +1,5 @@
 import XCTest
-import JSONs
+import JSON
 import Core
 import Dispatch
 

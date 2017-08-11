@@ -2,16 +2,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "JSONs",
+    name: "JSON",
     products: [
-        .library(name: "JSONs", targets: ["JSONs"]),
+        .library(name: "JSON", targets: ["JSON"]),
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/core.git", .upToNextMajor(from: "2.1.0")),
         .package(url: "https://github.com/vapor/mapper.git", .branch("beta")),
     ],
     targets: [
-        .target(name: "JSONs", dependencies: ["Core", "Mapper"]),
-        .testTarget(name: "JSONsTests", dependencies: ["JSONs"]),
+        .target(name: "JSON", dependencies: ["Core", "Mapper"]),
+        .testTarget(name: "JSONTests", dependencies: ["JSON"]),
     ]
 )
