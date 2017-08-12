@@ -117,12 +117,7 @@ class JSONTests: XCTestCase {
 //        XCTAssertEqual(bytes.makeString(), "\"foo\"")
 //    }
 //
-//    static let allTests = [
-//        ("testParse", testParse),
-//        ("testSerialize", testSerialize),
-//        ("testSerializePerformance", testSerializePerformance),
-//        ("testParsePerformance", testParsePerformance),
-//        ("testMultiThread", testMultiThread),
-//        ("testSerializeFragment", testSerializeFragment),
-//    ]
+    static let allTests = [
+        ("testParse", testParse),
+    ]
 }
