@@ -1,5 +1,5 @@
 internal final class JSONContainer<
-    Type: JSONDecodable, K: CodingKey
+    Type, K: CodingKey
 >: UnkeyedDecodingContainer, SingleValueDecodingContainer, KeyedDecodingContainerProtocol {
     typealias Key = K
     enum Mode { case single, keyed, unkeyed }
@@ -26,8 +26,15 @@ internal final class JSONContainer<
     }
 
     func get<K: CodingKey>(key: K) -> JSONData? {
-        let key = Type.jsonKeyMap(key: key)
-        return data.dictionary?[key]
+        let mappedKey: CodingKey
+
+        if let jsonDecodable = Type.self as? JSONDecodable.Type {
+            mappedKey = jsonDecodable.jsonKeyMap(key: key)
+        } else {
+            mappedKey = key
+        }
+
+        return data.dictionary?[mappedKey.stringValue]
     }
 
     // MARK: Computed
@@ -85,7 +92,6 @@ internal final class JSONContainer<
         forKey key: K
     ) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
         return try decoder.with(pushedKey: key) {
-
             let data = try assertGet(key: key)
             let cont = JSONContainer<Type, NestedKey>(decoder: decoder, mode: .keyed, data: data)
             return KeyedDecodingContainer(cont)
@@ -134,7 +140,10 @@ internal final class JSONContainer<
     func decode(_ type: Float.Type) throws -> Float { return try data.assertFloat() }
     func decode(_ type: Double.Type) throws -> Double { return try data.assertDouble() }
     func decode(_ type: String.Type) throws -> String { return try data.assertString() }
-    func decode<T>(_ type: T.Type) throws -> T where T : Decodable { return try T(from: decoder) }
+    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+        let decoder = JSONDecoder<T>(data: data, codingPath: self.decoder.codingPath)
+        return try T(from: decoder)
+    }
 
     // MARK: Decode Keyed
 
@@ -157,7 +166,7 @@ internal final class JSONContainer<
     func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
         return try decoder.with(pushedKey: key) {
             let data = try assertGet(key: key)
-            let decoder = JSONDecoder<Type>(data: data, codingPath: self.decoder.codingPath)
+            let decoder = JSONDecoder<T>(data: data, codingPath: self.decoder.codingPath)
             return try T(from: decoder)
         }
     }
