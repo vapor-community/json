@@ -2,6 +2,10 @@ import Core
 import JSON
 
 struct Name: JSONCodable {
+    static var jsonKeyMap = [
+        "first": "first_name"
+    ]
+
     let first: String
     let last: String
     var full: String {
@@ -10,19 +14,13 @@ struct Name: JSONCodable {
 }
 
 class Person: JSONCodable {
+    static var jsonKeyMap = [
+        "luckyNumbers": "lucky_numbers"
+    ]
+
     let name: Name
     let age: Int
     let luckyNumbers: [Double]
-
-    static func jsonKeyMap(key: CodingKey) -> CodingKey {
-        let string = key.stringValue
-        switch string {
-        case "luckyNumbers":
-            return StringKey("lucky_numbers")
-        default:
-            return key
-        }
-    }
 
     init(name: Name, age: Int, luckyNumbers: [Double]) {
         self.name = name
@@ -32,10 +30,10 @@ class Person: JSONCodable {
 }
 
 struct KitchenSink: JSONCodable {
+    let array: [String]
     let bool: Bool
     let string: String
     let int: Int
     let double: Double
     let object: [String: String]
-    let array: [String]
 }

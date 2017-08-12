@@ -2,7 +2,7 @@ import Core
 import Foundation
 
 public protocol JSONDecodable: Decodable {
-    static func jsonKeyMap(key: CodingKey) -> CodingKey
+    static var jsonKeyMap: [String: String] { get }
 }
 
 extension JSONDecodable {
@@ -17,15 +17,37 @@ extension JSONDecodable {
         let decoder = PolymorphicDecoder<JSONData>(
             data: json,
             codingPath: [],
-            codingKeyMap: Self.jsonKeyMap,
+            codingKeyMap: Self._jsonKeyMap,
             userInfo: [
                 .isJSON: true
             ]
-        )
+        ) { type, data, decoder in
+            var codingKeyMap = decoder.codingKeyMap
+            if let type = type as? JSONDecodable.Type {
+                codingKeyMap = type._jsonKeyMap
+            }
+
+            return PolymorphicDecoder<JSONData>.init(
+                data: data,
+                codingPath: decoder.codingPath,
+                codingKeyMap: codingKeyMap,
+                userInfo: decoder.userInfo,
+                factory: decoder.factory
+            )
+        }
+        
         try self.init(from: decoder)
     }
 
-    public static func jsonKeyMap(key: CodingKey) -> CodingKey {
-        return key
+    public static var jsonKeyMap: [String: String] {
+        return [:]
+    }
+
+    fileprivate static func _jsonKeyMap(key: CodingKey) -> CodingKey {
+        if let mapped = jsonKeyMap[key.stringValue] {
+            return StringKey(mapped)
+        } else {
+            return key
+        }
     }
 }

@@ -7,7 +7,7 @@ class JSONConvertibleTests: XCTestCase {
         let data = """
         {
             "name": {
-                "first": "Gertrude",
+                "first_name": "Gertrude",
                 "last": "Computer"
             },
             "age": 109,
@@ -26,7 +26,7 @@ class JSONConvertibleTests: XCTestCase {
         [
             {
                 "name": {
-                    "first": "Gertrude",
+                    "first_name": "Gertrude",
                     "last": "Computer"
                 },
                 "age": 109,
@@ -34,7 +34,7 @@ class JSONConvertibleTests: XCTestCase {
             },
             {
                 "name": {
-                    "first": "Gertrude",
+                    "first_name": "Gertrude",
                     "last": "Computer"
                 },
                 "age": 109,
