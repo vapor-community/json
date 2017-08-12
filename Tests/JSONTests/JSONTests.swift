@@ -50,15 +50,15 @@ class JSONTests: XCTestCase {
 //        XCTAssert(serialized.contains("\"array\":[null,true,1337,\"😄\"]"))
 //    }
 //
-//    func testPrettySerialize() throws {
-//        let json = try JSON([
-//            "hello": "world"
-//        ])
-//
-//        let serialized = try json.serialize(prettyPrint: true).makeString()
-//        let expectation = "{\n  \"hello\" : \"world\"\n}"
-//        XCTAssertEqual(serialized, expectation)
-//    }
+    func testPrettySerialize() throws {
+        struct Test: JSONCodable {
+            var hello = "world"
+        }
+
+        /// let serialized = try json.serialize(prettyPrint: true).makeString()
+        /// let expectation = "{\n  \"hello\" : \"world\"\n}"
+        /// XCTAssertEqual(serialized, expectation)
+    }
 //
 //    func testStringEscaping() throws {
 //        let json = try JSON(["he \r\n l \t l \n o w\"o\rrld "])
