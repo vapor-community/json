@@ -1,23 +1,33 @@
 import XCTest
 import JSON
-import Core
 import Dispatch
 
 class JSONTests: XCTestCase {
-//    func testParse() throws {
-//        let string = "{\"double\":3.14159265358979,\"object\":{\"nested\":\"text\"},\"array\":[true,1337,\"😄\"],\"int\":42,\"bool\":false,\"string\":\"ferret 🚀\"}"
-//        let json = try JSON(bytes: string)
-//
-//        XCTAssertEqual(json["bool"]?.bool, false)
-//        XCTAssertEqual(json["string"]?.string, "ferret 🚀")
-//        XCTAssertEqual(json["int"]?.int, 42)
-//        XCTAssertEqual(json["double"]?.double, 3.14159265358979)
-//        XCTAssertEqual(json["object", "nested"]?.string, "text")
-//        XCTAssertEqual(json["array", 0]?.bool, true)
-//        XCTAssertEqual(json["array", 1]?.int, 1337)
-//        XCTAssertEqual(json["array", 2]?.string, "😄")
-//    }
-//
+    func testParse() throws {
+        let data = """
+        {
+            "double": 3.14159265358979,
+            "object": {
+                "nested": "text"
+            },
+            "array": [true, 1337, "😄"],
+            "int": 42,
+            "bool": false,
+            "string": "ferret 🚀"
+        }
+        """.data(using: .utf8)!
+        let json = try! KitchenSink(json: data)
+
+        XCTAssertEqual(json.bool, false)
+        XCTAssertEqual(json.string, "ferret 🚀")
+        XCTAssertEqual(json.int, 42)
+        XCTAssertEqual(json.double, 3.14159265358979)
+        XCTAssertEqual(json.object["nested"], "text")
+        XCTAssertEqual(Bool(json.array[0]), true)
+        XCTAssertEqual(Int(json.array[1]), 1337)
+        XCTAssertEqual(json.array[2], "😄")
+    }
+
 //    func testSerialize() throws {
 //        var json: JSON = .object([
 //            "null": .null,

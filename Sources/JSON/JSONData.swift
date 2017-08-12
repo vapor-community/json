@@ -7,7 +7,17 @@ internal struct JSONData {
 
 extension JSONData: Polymorphic {
     var string: String? {
-        return raw as? String
+        if let string = raw as? String {
+            return string
+        } else if let bool = self.bool {
+            return bool.description
+        } else if let int = self.int {
+            return int.string
+        } else if let double = self.double {
+            return double.description
+        } else {
+            return nil
+        }
     }
 
     var int: Int? {

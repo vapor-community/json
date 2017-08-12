@@ -29,3 +29,12 @@ class Person: JSONCodable {
         self.luckyNumbers = luckyNumbers
     }
 }
+
+struct KitchenSink: JSONCodable {
+    let bool: Bool
+    let string: String
+    let int: Int
+    let double: Double
+    let object: [String: String]
+    let array: [String]
+}
