@@ -1,11 +1,7 @@
 import Foundation
 
 public final class JSONDecoder<Type: JSONDecodable>: Decoder {
-    public var codingPath: [CodingKey] {
-        didSet {
-            print("updated: \(codingPath.map { $0.stringValue })")
-        }
-    }
+    public var codingPath: [CodingKey]
     public var userInfo: [CodingUserInfoKey : Any]
     private var data: JSONData
 
@@ -33,35 +29,46 @@ public final class JSONDecoder<Type: JSONDecodable>: Decoder {
         return ret
     }
 
-    public func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
-        print(#function)
+    public func container<Key>(
+        keyedBy type: Key.Type
+    ) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
         let cont = JSONContainer<Type, Key>(decoder: self, mode: .keyed, data: data)
         return KeyedDecodingContainer(cont)
     }
 
     public func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        print(#function)
         return JSONContainer<Type, ArrayKey>(decoder: self, mode: .unkeyed, data: data)
     }
 
     public func singleValueContainer() throws -> SingleValueDecodingContainer {
-        print(#function)
         return JSONContainer<Type, ArrayKey>(decoder: self, mode: .single, data: data)
     }
 }
 
 extension String: Error { }
 
-struct ArrayKey: CodingKey {
+struct ArrayKey {
+    let index: Int
+
+    init(index: Int) {
+        self.index = index
+    }
+}
+
+extension ArrayKey: CodingKey {
     var stringValue: String {
-        return ""
+        return index.description
     }
 
-    var intValue: Int?
+    var intValue: Int? {
+        return index
+    }
 
     init?(intValue: Int) {
-        self.intValue = intValue
+        fatalError("Not supported")
     }
 
-    init?(stringValue: String) {}
+    init?(stringValue: String) {
+        fatalError("Not supported")
+    }
 }
