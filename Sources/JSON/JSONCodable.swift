@@ -1,3 +1,4 @@
+import Core
 import Foundation
 
 // MARK: protocols
@@ -10,8 +11,22 @@ public protocol JSONEncodable: Encodable {}
 public typealias JSONCodable = JSONDecodable & JSONEncodable
 
 extension JSONDecodable {
-    public init(json: Data) throws {
-        let decoder = try JSONDecoder<Self>(data: json)
+    public init(json data: Data) throws {
+        var options: JSONSerialization.ReadingOptions = []
+        options.insert(.allowFragments)
+        let raw = try JSONSerialization.jsonObject(
+            with: data,
+            options: options
+        )
+        let json = JSONData(raw: raw)
+        let decoder = PolymorphicDecoder<JSONData>(
+            data: json,
+            codingPath: [],
+            codingKeyMap: Self.jsonKeyMap,
+            userInfo: [
+                .isJSON: true
+            ]
+        )
         try self.init(from: decoder)
     }
 
@@ -20,6 +35,11 @@ extension JSONDecodable {
     }
 }
 
+extension CodingUserInfoKey {
+    public static var isJSON: CodingUserInfoKey {
+        return CodingUserInfoKey(rawValue: "JSON")!
+    }
+}
 
 extension Array: JSONCodable {
     public static func jsonKeyMap(key: CodingKey) -> CodingKey {

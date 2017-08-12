@@ -7,11 +7,10 @@ let package = Package(
         .library(name: "JSON", targets: ["JSON"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/core.git", .upToNextMajor(from: "2.1.0")),
-        .package(url: "https://github.com/vapor/mapper.git", .branch("beta")),
+        .package(url: "https://github.com/vapor/core.git", .branch("polymorphic-decoder")),
     ],
     targets: [
-        .target(name: "JSON", dependencies: ["Core", "Mapper"]),
+        .target(name: "JSON", dependencies: ["Core"]),
         .testTarget(name: "JSONTests", dependencies: ["JSON"]),
     ]
 )

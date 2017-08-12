@@ -1,5 +1,5 @@
+import Core
 import Foundation
-import Mapper
 
 internal struct JSONData {
     var raw: Any
@@ -22,6 +22,10 @@ extension JSONData: Polymorphic {
 
     var int: Int? {
         return raw as? Int
+    }
+
+    var uint: UInt? {
+        return raw as? UInt
     }
 
     var double: Double? {
