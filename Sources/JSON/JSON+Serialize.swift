@@ -12,7 +12,7 @@ extension JSON {
             let encoded = b.base64Encoded
             return [.quote] + encoded + [.quote]
         case .date, .string:
-            let bytes = string?.makeBytes() ?? []
+            let bytes = string?.escaped().makeBytes() ?? []
             return [.quote] + bytes + [.quote]
         case .number:
             return string?.makeBytes() ?? []
@@ -34,5 +34,31 @@ extension JSON {
             options: options
         )
         return data.makeBytes()
+    }
+}
+
+extension String {
+    fileprivate func escaped() -> String {
+        var string = ""
+        string.reserveCapacity(string.count)
+        
+        for char in self {
+            switch char {
+            case "\"":
+                string.append(contentsOf: "\\\"")
+            case "\\":
+                string.append(contentsOf: "\\\\")
+            case "\t":
+                string.append(contentsOf: "\\t")
+            case "\n":
+                string.append(contentsOf: "\\n")
+            case "\r":
+                string.append(contentsOf: "\\r")
+            default:
+                string.append(char)
+            }
+        }
+        
+        return string
     }
 }
