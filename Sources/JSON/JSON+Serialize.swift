@@ -40,7 +40,7 @@ extension JSON {
 extension String {
     fileprivate func escaped() -> String {
         var string = ""
-        string.reserveCapacity(string.count)
+        string.reserveCapacity(string.characters.count)
         
         for char in self {
             switch char {
