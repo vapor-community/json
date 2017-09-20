@@ -42,7 +42,7 @@ extension String {
         var string = ""
         string.reserveCapacity(string.characters.count)
         
-        for char in self {
+        for char in self.characters {
             switch char {
             case "\"":
                 string.append(contentsOf: "\\\"")
