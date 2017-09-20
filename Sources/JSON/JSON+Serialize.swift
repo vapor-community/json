@@ -45,15 +45,15 @@ extension String {
         for char in self.characters {
             switch char {
             case "\"":
-                string.append(contentsOf: "\\\"")
+                string += "\\\""
             case "\\":
-                string.append(contentsOf: "\\\\")
+                string += "\\\\"
             case "\t":
-                string.append(contentsOf: "\\t")
+                string += "\\t"
             case "\n":
-                string.append(contentsOf: "\\n")
+                string += "\\n"
             case "\r":
-                string.append(contentsOf: "\\r")
+                string += "\\r"
             default:
                 string.append(char)
             }
