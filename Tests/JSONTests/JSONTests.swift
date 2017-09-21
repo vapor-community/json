@@ -13,7 +13,8 @@ class JSONTests: XCTestCase {
         ("testMultiThread", testMultiThread),
         ("testSerializeFragment", testSerializeFragment),
         ("testSerializeDate", testSerializeDate),
-        ("testSerializeBytes", testSerializeBytes)
+        ("testSerializeBytes", testSerializeBytes),
+        ("testSerializeQuotedString", testSerializeQuotedString),
     ]
 
     func testParse() throws {
@@ -140,5 +141,12 @@ class JSONTests: XCTestCase {
         XCTAssertEqual(bytes.makeString(), "\"Zm9v\"")
         let parsed = try JSON(bytes: bytes)
         XCTAssertEqual(parsed.bytes?.base64Decoded.makeString(), "foo")
+    }
+
+    func testSerializeQuotedString() throws {
+        let input = "Quotes \"should\" be preserved"
+        let json = JSON(.string(input))
+        let bytes = try json.serialize()
+        XCTAssertEqual(bytes.makeString(), "\"Quotes \\\"should\\\" be preserved\"")
     }
 }
