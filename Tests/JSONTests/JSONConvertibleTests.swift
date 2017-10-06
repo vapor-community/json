@@ -38,7 +38,9 @@ class JSONConvertibleTests: XCTestCase {
     static let allTests = [
         ("testJSONInitializable", testJSONInitializable),
         ("testJSONRepresentable", testJSONRepresentable),
-        ("testSequenceJSONRepresentable", testSequenceJSONRepresentable)
+        ("testSequenceJSONRepresentable", testSequenceJSONRepresentable),
+        ("testSetters", testSetters),
+        ("testGetters", testGetters)
     ]
     
     override func setUp() {
