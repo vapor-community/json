@@ -8,6 +8,8 @@ class JSONTests: XCTestCase {
     static let allTests = [
         ("testParse", testParse),
         ("testSerialize", testSerialize),
+        ("testPrettySerialize", testPrettySerialize),
+        ("testStringEscaping", testStringEscaping),
         ("testSerializePerformance", testSerializePerformance),
         ("testParsePerformance", testParsePerformance),
         ("testMultiThread", testMultiThread),
