@@ -100,11 +100,11 @@ class JSONConvertibleTests: XCTestCase {
 
     func testJSONSequence() throws {
         let personOne = Person(name: "John", age: 24)
-        let personTwo = Person(name: "Louie", age: 25)
+        let personTwo = Person(name: "Louie", age: 44)
         let persons = [personOne, personTwo]
         let json = try persons.makeJSON()
         
-        let expectedString = "[{\"name\":\"John\",\"age\":24},{\"name\":\"Louie\",\"age\":25}]"
+        let expectedString = "[{\"name\":\"John\",\"age\":24},{\"name\":\"Louie\",\"age\":44}]"
         let expectedJSON = try JSON(bytes: expectedString)
         
         XCTAssertEqual(json, expectedJSON)
