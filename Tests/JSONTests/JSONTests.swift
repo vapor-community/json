@@ -60,7 +60,7 @@ class JSONTests: XCTestCase {
         let json = JSON(node:
             .object(
                 [
-                    "hello": "world"
+                    "hello" : "world"
                 ]
             )
         )
