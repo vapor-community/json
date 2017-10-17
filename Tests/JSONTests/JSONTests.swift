@@ -64,9 +64,16 @@ class JSONTests: XCTestCase {
                 ]
             )
         )
-
+        
         let serialized = try json.serialize(prettyPrint: true).makeString()
-        let expectation = "{\n  \"hello\" : \"world\"\n}"
+        // JSONSerialization.data(withJSONObject: _, options: .prettyPrinted)
+        // results in different spacing in OSX/Linux
+        )
+        #if os(Linux)
+            let expectation = "{\n  \"hello\": \"world\"\n}"
+        #else
+            let expectation = "{\n  \"hello\" : \"world\"\n}"
+        #endif
         XCTAssertEqual(serialized, expectation)
     }
 
