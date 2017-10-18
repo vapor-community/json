@@ -60,11 +60,11 @@ class JSONTests: XCTestCase {
         let json = JSON(node:
             .object(
                 [
-                    "hello" : "world"
+                    "hello": "world"
                 ]
             )
         )
-        
+
         let serialized = try json.serialize(prettyPrint: true).makeString()
         // JSONSerialization.data(withJSONObject: _, options: .prettyPrinted)
         // results in different spacing in OSX/Linux
