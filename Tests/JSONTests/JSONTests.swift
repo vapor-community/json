@@ -68,7 +68,6 @@ class JSONTests: XCTestCase {
         let serialized = try json.serialize(prettyPrint: true).makeString()
         // JSONSerialization.data(withJSONObject: _, options: .prettyPrinted)
         // results in different spacing in OSX/Linux
-        )
         #if os(Linux)
             let expectation = "{\n  \"hello\": \"world\"\n}"
         #else
