@@ -16,6 +16,6 @@ Pod::Spec.new do |spec|
 
   spec.subspec "Default" do |ss|
     ss.source_files = 'Sources/**/*.{swift}'
-    ss.dependency 'NodeCocoapods', '~> 2.0'
+    ss.dependency 'NodeCocoapods', '~> 2.1.1'
   end
 end
