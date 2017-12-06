@@ -40,9 +40,9 @@ extension JSON {
 extension String {
     fileprivate func escaped() -> String {
         var string = ""
-        string.reserveCapacity(string.characters.count)
+        string.reserveCapacity(string.count)
         
-        for char in self.characters {
+        for char in self {
             switch char {
             case "\"":
                 string += "\\\""
