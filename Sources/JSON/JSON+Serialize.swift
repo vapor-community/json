@@ -40,9 +40,9 @@ extension JSON {
 extension String {
     fileprivate func escaped() -> String {
         var string = ""
-        string.reserveCapacity(string.characters.count)
+        string.reserveCapacity(string.toCharacterSequence().count)
         
-        for char in self.characters {
+        for char in self.toCharacterSequence() {
             switch char {
             case "\"":
                 string += "\\\""
@@ -62,3 +62,16 @@ extension String {
         return string
     }
 }
+
+extension String {
+    #if swift(>=4.0)
+    internal func toCharacterSequence() -> String {
+        return self
+    }
+    #else
+    internal func toCharacterSequence() -> CharacterView {
+    return self.characters
+    }
+    #endif
+}
+
